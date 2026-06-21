@@ -13,11 +13,11 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @Query("select r from Restaurant r where r.acceptingOrders=true ")
     List<Restaurant> findByAcceptingOrdersTrue();
-    @Query("Select r from Restaurant r where c.isActive=true and r.deliveryFee<=:fee")
+    @Query("Select r from Restaurant r where r.isActive=true and r.deliveryFee<=:fee")
     List<Restaurant>  findByDeliveryFeeLessThanEqual(@Param("fee") double fee);
 
     @Query("select r from Restaurant r where r.isActive=true and r.restaurantOwner.businessLicenseCode=:id")
-    List<Restaurant> allRestaurantOwnedById(@Param("id") int id);
+    List<Restaurant> allRestaurantOwnedById(@Param("id") String id);
 
     @Query("SELECT r FROM Restaurant r WHERE r.isActive=true AND r.name LIKE (CONCAT('%', :keyword, '%'))")
     List<Restaurant> searchRestaurantsByName(@Param("keyword") String keyword);
