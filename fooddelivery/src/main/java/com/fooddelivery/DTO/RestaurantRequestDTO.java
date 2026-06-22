@@ -1,6 +1,8 @@
 package com.fooddelivery.DTO;
 
 import com.fooddelivery.Entities.Restaurant;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,8 @@ public class RestaurantRequestDTO {
     private LocalDateTime openingTime;
     private LocalDateTime closingTime;
     private int minOrderAmount;
+    @PositiveOrZero
+    @DecimalMin("0.0")
     private double deliveryFee;
     private boolean acceptingOrders;
 
