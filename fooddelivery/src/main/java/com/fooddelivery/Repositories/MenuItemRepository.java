@@ -1,6 +1,5 @@
 package com.fooddelivery.Repositories;
 
-import com.fooddelivery.Entities.ComboMeal;
 import com.fooddelivery.Entities.MenuItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +16,4 @@ public interface MenuItemRepository extends JpaRepository<MenuItem,Integer> {
     List<MenuItem> findByIsVegetarianTrue();
     @Query("SELECT mi FROM MenuItem mi WHERE mi.isActive=true AND mi.price BETWEEN :min AND :max")
     List<MenuItem> findByPriceBetween(double min, double max);
-    @Query("SELECT c FROM ComboMeal c JOIN c.menuItemList m WHERE c.isActive = true AND m.id = :menuItemId")
-    List<ComboMeal> findComboMealsByMenuItemId(@Param("menuItemId") Integer menuItemId);
 }
