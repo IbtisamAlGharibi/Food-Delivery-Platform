@@ -1,6 +1,8 @@
 package com.fooddelivery.DTO;
 
 import com.fooddelivery.Entities.Order;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,8 +15,14 @@ public class OrderRequestDTO {
     private Date orderDate;
     private String status;
     private double subtotal;
+    @PositiveOrZero
+    @DecimalMin("0.0")
     private double deliveryFee;
+    @PositiveOrZero
+    @DecimalMin("0.0")
     private double discountAmount;
+    @PositiveOrZero
+    @DecimalMin("0.0")
     private double totalAmount;
     private String deliveryNotes;
 
