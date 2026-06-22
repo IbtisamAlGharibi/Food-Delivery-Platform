@@ -1,6 +1,8 @@
 package com.fooddelivery.DTO;
 
 import com.fooddelivery.Entities.Payment;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,8 @@ public class PaymentRequestDTO {
     private int transactionRef;
     private String paymentMethod;
     private String status;
+    @PositiveOrZero
+    @DecimalMin("0.0")
     private double amount;
 
     public Payment toEntity() {
