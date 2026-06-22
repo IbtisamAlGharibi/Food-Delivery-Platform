@@ -25,6 +25,9 @@ public class Order {
     private double discountAmount;
     private double totalAmount;
     private String deliveryNotes;
+    private Date createdDate;
+    private Date updatedDate;
+    private boolean  isActive;
 
     @ManyToOne
     private Customer customer;
