@@ -15,6 +15,7 @@ public class CustomerResponseDTO {
     private String email;
     private int phone;
     private int loyaltyPoints;
+    private boolean  isActive;
 
     public static CustomerResponseDTO fromEntity(Customer customer){
         CustomerResponseDTO dto = new CustomerResponseDTO();
@@ -24,6 +25,7 @@ public class CustomerResponseDTO {
         dto.setEmail(customer.getEmail());
         dto.setPhone(customer.getPhone());
         dto.setLoyaltyPoints(customer.getLoyaltyPoints());
+        dto.setActive(customer.isActive());
 
         return dto;
     }

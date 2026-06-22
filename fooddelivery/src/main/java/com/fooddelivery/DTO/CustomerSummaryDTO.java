@@ -12,12 +12,14 @@ public class CustomerSummaryDTO {
     private int customerCode;
     private String firstName;
     private String lastName;
+    private boolean  isActive;
 
     public static CustomerSummaryDTO fromEntity(Customer customer){
         CustomerSummaryDTO dto = new CustomerSummaryDTO();
         dto.setCustomerCode(customer.getCustomerCode());
         dto.setFirstName(customer.getFirstName());
         dto.setLastName(customer.getLastName());
+        dto.setActive(customer.isActive());
 
         return dto;
     }
