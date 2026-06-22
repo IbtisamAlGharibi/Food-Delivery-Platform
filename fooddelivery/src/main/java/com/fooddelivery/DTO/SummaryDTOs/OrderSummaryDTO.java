@@ -1,5 +1,6 @@
-package com.fooddelivery.DTO;
+package com.fooddelivery.DTO.SummaryDTOs;
 
+import com.fooddelivery.DTO.ResponseDTOs.OrderResponseDTO;
 import com.fooddelivery.Entities.Order;
 
 import java.util.Date;

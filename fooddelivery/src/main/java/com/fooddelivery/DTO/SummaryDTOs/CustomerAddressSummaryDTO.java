@@ -1,6 +1,6 @@
-package com.fooddelivery.DTO;
+package com.fooddelivery.DTO.SummaryDTOs;
 
-import com.fooddelivery.Entities.Customer;
+import com.fooddelivery.DTO.ResponseDTOs.CustomerAddressResponseDTO;
 import com.fooddelivery.Entities.CustomerAddress;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,13 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerAddressResponseDTO {
+public class CustomerAddressSummaryDTO {
     private int id;
     private String street;
     private String city;
     private String building;
-    private boolean isDefault;
-    private boolean  isActive;
 
     public static CustomerAddressResponseDTO fromEntity(CustomerAddress customerAddress){
         CustomerAddressResponseDTO dto = new CustomerAddressResponseDTO();
@@ -23,10 +21,8 @@ public class CustomerAddressResponseDTO {
         dto.setStreet(customerAddress.getStreet());
         dto.setCity(customerAddress.getCity());
         dto.setBuilding(customerAddress.getBuilding());
-        dto.setDefault(customerAddress.isDefault());
         dto.setActive(customerAddress.isActive());
 
         return dto;
     }
-
 }

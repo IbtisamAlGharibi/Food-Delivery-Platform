@@ -1,4 +1,4 @@
-package com.fooddelivery.DTO;
+package com.fooddelivery.DTO.SummaryDTOs;
 
 import com.fooddelivery.Entities.Review;
 import lombok.AllArgsConstructor;

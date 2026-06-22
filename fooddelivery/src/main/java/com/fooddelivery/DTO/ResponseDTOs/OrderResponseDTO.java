@@ -1,7 +1,6 @@
-package com.fooddelivery.DTO;
+package com.fooddelivery.DTO.ResponseDTOs;
 
 import com.fooddelivery.Entities.Order;
-import com.fooddelivery.Entities.Restaurant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

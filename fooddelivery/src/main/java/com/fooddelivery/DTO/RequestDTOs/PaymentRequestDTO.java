@@ -1,4 +1,4 @@
-package com.fooddelivery.DTO;
+package com.fooddelivery.DTO.RequestDTOs;
 
 import com.fooddelivery.Entities.Payment;
 import jakarta.validation.constraints.DecimalMin;
