@@ -7,6 +7,7 @@ import com.fooddelivery.Entities.MenuItem;
 import com.fooddelivery.Entities.Restaurant;
 import com.fooddelivery.Entities.RestaurantOwner;
 import com.fooddelivery.Exceptions.ResourceNotFoundException;
+import com.fooddelivery.Repositories.MenuItemRepository;
 import com.fooddelivery.Repositories.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,11 @@ import java.util.List;
 @Service
 public class RestaurantService {
     RestaurantRepository restaurantRepository;
+    MenuItemRepository menuItemRepository;
     @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository) {
+    public RestaurantService(RestaurantRepository restaurantRepository,MenuItemRepository menuItemRepository) {
         this.restaurantRepository = restaurantRepository;
+        this.menuItemRepository = menuItemRepository;
     }
 
     public RestaurantResponseDTO createRestaurant(RestaurantRequestDTO dto, Integer ownerId){
@@ -80,5 +83,15 @@ public class RestaurantService {
             result.add(MenuItemResponseDTO.fromEntity(item));
         }
         return result;
+    }
+    public void bulkUpdateMenuItemPrices(Integer restaurantId, double percentageIncrease){
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+
+        for(MenuItem item : restaurant.getMenuItemList()){
+            double newPrice = item.getPrice() + (item.getPrice() * percentageIncrease / 100);
+            item.setPrice(newPrice);
+            menuItemRepository.save(item);
+        }
     }
 }
