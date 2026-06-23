@@ -62,4 +62,12 @@ public class RestaurantService {
         }
         return result;
     }
+    public List<RestaurantResponseDTO> getRestaurantsUnderDeliveryFee(double maxFee){
+        List<Restaurant> restaurants = restaurantRepository.findByDeliveryFeeLessThanEqual(maxFee);
+        List<RestaurantResponseDTO> result = new ArrayList<>();
+        for(Restaurant restaurant : restaurants){
+            result.add(RestaurantResponseDTO.fromEntity(restaurant));
+        }
+        return result;
+    }
 }
