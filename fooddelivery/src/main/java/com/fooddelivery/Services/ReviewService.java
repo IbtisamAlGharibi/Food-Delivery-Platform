@@ -1,18 +1,14 @@
 package com.fooddelivery.Services;
 
 import com.fooddelivery.DTO.ResponseDTOs.ReviewResponseDTO;
-import com.fooddelivery.Entities.Customer;
-import com.fooddelivery.Entities.Restaurant;
-import com.fooddelivery.Entities.Review;
+import com.fooddelivery.Entities.*;
 import com.fooddelivery.Exceptions.ResourceNotFoundException;
-import com.fooddelivery.Repositories.CustomerRepository;
-import com.fooddelivery.Repositories.OrderRepository;
-import com.fooddelivery.Repositories.RestaurantRepository;
-import com.fooddelivery.Repositories.ReviewRepository;
+import com.fooddelivery.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ReviewService {
@@ -20,13 +16,15 @@ public class ReviewService {
     CustomerRepository customerRepository;
     RestaurantRepository restaurantRepository;
     OrderRepository orderRepository;
+    DeliveryRepository deliveryRepository;
     @Autowired
     public ReviewService(ReviewRepository reviewRepository, CustomerRepository customerRepository,
-                         RestaurantRepository restaurantRepository, OrderRepository orderRepository) {
+                         RestaurantRepository restaurantRepository, OrderRepository orderRepository,DeliveryRepository deliveryRepository) {
         this.reviewRepository = reviewRepository;
         this.customerRepository = customerRepository;
         this.restaurantRepository = restaurantRepository;
         this.orderRepository = orderRepository;
+        this.deliveryRepository= deliveryRepository;
     }
     public ReviewResponseDTO leaveRestaurantReview(Integer customerId,
                                                    Integer restaurantId, int rating,String comment){
@@ -39,6 +37,32 @@ public class ReviewService {
         review.setCustomer(customer);
         review.setRestaurant(restaurant);
         review.setTargetType("RESTAURANT");
+        review.setRating(rating);
+        review.setComment(comment);
+        review.setCreatedAt(LocalDateTime.now());
+        review = reviewRepository.save(review);
+
+        return ReviewResponseDTO.fromEntity(review);
+    }
+    public ReviewResponseDTO leaveDriverReview(Integer customerId, Integer driverId,
+            int rating, String comment){
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+
+        DeliveryDriver driver = new DeliveryDriver();
+        List<Delivery> deliveries = deliveryRepository.findAll();
+
+        for (Delivery delivery : deliveries) {
+            if (delivery.getDeliveryDriver() != null &&
+                    delivery.getDeliveryDriver().getDriverCode() == driverId) {
+                driver = delivery.getDeliveryDriver();
+                break;
+            }
+        }
+        Review review = new Review();
+        review.setCustomer(customer);
+        review.setDeliveryDriver(driver);
+        review.setTargetType("DRIVER");
         review.setRating(rating);
         review.setComment(comment);
         review.setCreatedAt(LocalDateTime.now());
