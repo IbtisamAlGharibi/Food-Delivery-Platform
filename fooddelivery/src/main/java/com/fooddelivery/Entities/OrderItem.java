@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +20,9 @@ public class OrderItem {
     private double unitPrice;
     private double totalPrice;
     private String specialInstructions;
+    private Date createdDate;
+    private Date updatedDate;
+    private boolean  isActive;
     @ManyToOne
     private Order order;
     @ManyToOne

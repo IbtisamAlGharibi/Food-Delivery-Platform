@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -75,5 +76,18 @@ public class OrderService {
         orderRepository.save(order);
 
         return OrderResponseDTO.fromEntity(order);
+    }
+    public void removeMenuItemFromOrder(Integer orderId, Integer orderItemId){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        if (order.getOrderItemList() != null) {
+            for (OrderItem item : order.getOrderItemList()) {
+                if (item.getItemCode() == orderItemId) {
+                    item.setActive(false);
+                    break;
+                }
+            }
+        }
+        orderRepository.save(order);
     }
 }
