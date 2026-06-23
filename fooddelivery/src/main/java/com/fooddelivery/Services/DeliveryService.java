@@ -11,6 +11,7 @@ import com.fooddelivery.Repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -70,5 +71,14 @@ public class DeliveryService {
             }
         }
         throw new ResourceNotFoundException("Driver not found");
+    }
+    public DeliveryResponseDTO markDeliveryPickedUp(Integer deliveryId){
+        Delivery delivery = deliveryRepository.findById(deliveryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Delivery not found"));
+        delivery.setStatus("PICKED UP");
+        delivery.setPickedUpAt(LocalDateTime.now());
+        delivery = deliveryRepository.save(delivery);
+
+        return DeliveryResponseDTO.fromEntity(delivery);
     }
 }
