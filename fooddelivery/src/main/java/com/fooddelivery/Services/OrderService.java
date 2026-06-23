@@ -1,6 +1,8 @@
 package com.fooddelivery.Services;
-
+import com.fooddelivery.Repositories.CorporateOrderRepository;
+import com.fooddelivery.DTO.RequestDTOs.CorporateOrderRequestDTO;
 import com.fooddelivery.DTO.RequestDTOs.OrderItemRequestDTO;
+import com.fooddelivery.DTO.ResponseDTOs.CorporateOrderResponseDTO;
 import com.fooddelivery.DTO.ResponseDTOs.OrderResponseDTO;
 import com.fooddelivery.Entities.*;
 import com.fooddelivery.Exceptions.InvalidOrderStateException;
@@ -19,14 +21,16 @@ public class OrderService {
     RestaurantRepository restaurantRepository;
     MenuItemRepository menuItemRepository;
     OrderItemRepository orderItemRepository;
+    CorporateOrderRepository corporateOrderRepository;
     @Autowired
     public OrderService(OrderRepository orderRepository,CustomerRepository customerRepository, RestaurantRepository restaurantRepository
-    ,MenuItemRepository menuItemRepository, OrderItemRepository orderItemRepository) {
+    ,MenuItemRepository menuItemRepository, OrderItemRepository orderItemRepository, CorporateOrderRepository corporateOrderRepository) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.restaurantRepository= restaurantRepository;
         this.menuItemRepository = menuItemRepository;
         this.orderItemRepository = orderItemRepository;
+        this.corporateOrderRepository= corporateOrderRepository;
     }
     public OrderResponseDTO createOrder(Integer customerId, Integer restaurantId, List<OrderItemRequestDTO> items){
         Customer customer = customerRepository.findById(customerId)
@@ -133,5 +137,15 @@ public class OrderService {
         order = orderRepository.save(order);
 
         return OrderResponseDTO.fromEntity(order);
+    }
+    public CorporateOrderResponseDTO placeCorporateOrder(CorporateOrderRequestDTO dto){
+        CorporateOrder corporateOrder = dto.toEntity();
+        corporateOrder.setCompanyName(dto.getCompanyName());
+        corporateOrder.setCostCenter(dto.getCostCenter());
+        corporateOrder.setStatus(dto.getStatus());
+        corporateOrder.setTotalAmount(dto.getTotalAmount());
+        corporateOrder = corporateOrderRepository.save(corporateOrder);
+
+        return CorporateOrderResponseDTO.fromEntity(corporateOrder);
     }
 }
