@@ -39,4 +39,21 @@ public class OrderService {
 
         return OrderResponseDTO.fromEntity(order);
     }
+    public OrderResponseDTO createOrder(Integer customerId, Integer restaurantId,
+                                        List<OrderItemRequestDTO> items, String notes){
+
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+
+        Order order = new Order();
+        order.setCustomer(customer);
+        order.setRestaurant(restaurant);
+        order.setDeliveryNotes(notes);
+        order = orderRepository.save(order);
+
+        return OrderResponseDTO.fromEntity(order);
+    }
 }
