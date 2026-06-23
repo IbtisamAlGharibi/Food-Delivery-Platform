@@ -3,6 +3,7 @@ package com.fooddelivery.Services;
 import com.fooddelivery.DTO.RequestDTOs.OrderItemRequestDTO;
 import com.fooddelivery.DTO.ResponseDTOs.OrderResponseDTO;
 import com.fooddelivery.Entities.*;
+import com.fooddelivery.Exceptions.InvalidOrderStateException;
 import com.fooddelivery.Exceptions.ResourceNotFoundException;
 import com.fooddelivery.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,19 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
         order.setStatus(newStatus);
+        order = orderRepository.save(order);
+
+        return OrderResponseDTO.fromEntity(order);
+    }
+    public OrderResponseDTO cancelOrder(Integer orderId){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        if(!order.getStatus().equalsIgnoreCase("PENDING")){
+            throw new InvalidOrderStateException("Only pending orders can be cancelled");
+        }
+        order.setStatus("CANCELLED");
+        order.setActive(false);
         order = orderRepository.save(order);
 
         return OrderResponseDTO.fromEntity(order);
