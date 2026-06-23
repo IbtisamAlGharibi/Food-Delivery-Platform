@@ -90,4 +90,12 @@ public class OrderService {
         }
         orderRepository.save(order);
     }
+    public OrderResponseDTO applyDiscount(Integer orderId, double discountAmount){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        order.setDiscountAmount(discountAmount);
+        order = orderRepository.save(order);
+
+        return OrderResponseDTO.fromEntity(order);
+    }
 }
