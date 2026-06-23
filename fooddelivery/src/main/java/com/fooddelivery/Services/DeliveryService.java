@@ -100,4 +100,17 @@ public class DeliveryService {
         }
         return result;
     }
+    public DeliveryDriverResponseDTO toggleDriverOnlineStatus(Integer driverId, boolean isOnline){
+        List<Delivery> deliveries = deliveryRepository.findAll();
+        for(Delivery delivery : deliveries){
+            if(delivery.getDeliveryDriver() != null &&
+                    delivery.getDeliveryDriver().getDriverCode() == driverId){
+                DeliveryDriver driver = delivery.getDeliveryDriver();
+                driver.setOnline(isOnline);
+                deliveryRepository.save(delivery);
+                return DeliveryDriverResponseDTO.fromEntity(driver);
+            }
+        }
+        throw new ResourceNotFoundException("Driver not found");
+    }
 }
