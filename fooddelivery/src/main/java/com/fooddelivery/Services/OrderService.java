@@ -2,13 +2,9 @@ package com.fooddelivery.Services;
 
 import com.fooddelivery.DTO.RequestDTOs.OrderItemRequestDTO;
 import com.fooddelivery.DTO.ResponseDTOs.OrderResponseDTO;
-import com.fooddelivery.Entities.Customer;
-import com.fooddelivery.Entities.Order;
-import com.fooddelivery.Entities.Restaurant;
+import com.fooddelivery.Entities.*;
 import com.fooddelivery.Exceptions.ResourceNotFoundException;
-import com.fooddelivery.Repositories.CustomerRepository;
-import com.fooddelivery.Repositories.OrderRepository;
-import com.fooddelivery.Repositories.RestaurantRepository;
+import com.fooddelivery.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +15,16 @@ public class OrderService {
     OrderRepository orderRepository;
     CustomerRepository customerRepository;
     RestaurantRepository restaurantRepository;
+    MenuItemRepository menuItemRepository;
+    OrderItemRepository orderItemRepository;
     @Autowired
-    public OrderService(OrderRepository orderRepository,CustomerRepository customerRepository, RestaurantRepository restaurantRepository) {
+    public OrderService(OrderRepository orderRepository,CustomerRepository customerRepository, RestaurantRepository restaurantRepository
+    ,MenuItemRepository menuItemRepository, OrderItemRepository orderItemRepository) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.restaurantRepository= restaurantRepository;
+        this.menuItemRepository = menuItemRepository;
+        this.orderItemRepository = orderItemRepository;
     }
     public OrderResponseDTO createOrder(Integer customerId, Integer restaurantId, List<OrderItemRequestDTO> items){
         Customer customer = customerRepository.findById(customerId)
@@ -53,6 +54,25 @@ public class OrderService {
         order.setRestaurant(restaurant);
         order.setDeliveryNotes(notes);
         order = orderRepository.save(order);
+
+        return OrderResponseDTO.fromEntity(order);
+    }
+    public OrderResponseDTO addMenuItemToOrder(Integer orderId, Integer menuItemId, int quantity){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        MenuItem menuItem = menuItemRepository.findById(menuItemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Menu item not found"));
+
+        OrderItem item = new OrderItem();
+        item.setMenuItem(menuItem);
+        item.setOrder(order);
+        item.setQuantity(quantity);
+        item.setUnitPrice(menuItem.getPrice());
+        item.setTotalPrice(quantity * menuItem.getPrice());
+        item = (OrderItem) orderItemRepository.save(item);
+        order.getOrderItemList().add(item);
+        orderRepository.save(order);
 
         return OrderResponseDTO.fromEntity(order);
     }
