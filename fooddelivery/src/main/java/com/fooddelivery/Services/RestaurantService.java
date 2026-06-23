@@ -9,6 +9,9 @@ import com.fooddelivery.Repositories.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class RestaurantService {
     RestaurantRepository restaurantRepository;
@@ -50,5 +53,13 @@ public class RestaurantService {
         restaurant = restaurantRepository.save(restaurant);
 
         return RestaurantResponseDTO.fromEntity(restaurant);
+    }
+    public List<RestaurantResponseDTO> getRestaurantsByCuisine(String cuisine){
+        List<Restaurant> restaurants = restaurantRepository.findByCuisineTypeIgnoreCase(cuisine);
+        List<RestaurantResponseDTO> result = new ArrayList<>();
+        for(Restaurant restaurant : restaurants){
+            result.add(RestaurantResponseDTO.fromEntity(restaurant));
+        }
+        return result;
     }
 }
