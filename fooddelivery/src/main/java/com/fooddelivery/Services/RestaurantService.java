@@ -43,4 +43,12 @@ public class RestaurantService {
 
         return RestaurantResponseDTO.fromEntity(restaurant);
     }
+    public RestaurantResponseDTO updateDeliveryFee(Integer restaurantId, double newFee){
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+        restaurant.setDeliveryFee(newFee);
+        restaurant = restaurantRepository.save(restaurant);
+
+        return RestaurantResponseDTO.fromEntity(restaurant);
+    }
 }
