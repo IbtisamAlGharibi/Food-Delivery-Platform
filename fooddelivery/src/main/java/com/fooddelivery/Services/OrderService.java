@@ -98,4 +98,12 @@ public class OrderService {
 
         return OrderResponseDTO.fromEntity(order);
     }
+    public OrderResponseDTO updateOrderStatus(Integer orderId, String newStatus){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        order.setStatus(newStatus);
+        order = orderRepository.save(order);
+
+        return OrderResponseDTO.fromEntity(order);
+    }
 }
