@@ -81,4 +81,13 @@ public class DeliveryService {
 
         return DeliveryResponseDTO.fromEntity(delivery);
     }
+    public DeliveryResponseDTO markDeliveryDelivered(Integer deliveryId){
+        Delivery delivery = deliveryRepository.findById(deliveryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Delivery not found"));
+        delivery.setStatus("DELIVERED");
+        delivery.setDeliveredAt(LocalDateTime.now());
+        delivery = deliveryRepository.save(delivery);
+
+        return DeliveryResponseDTO.fromEntity(delivery);
+    }
 }
