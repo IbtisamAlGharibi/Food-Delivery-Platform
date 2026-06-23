@@ -35,4 +35,12 @@ public class RestaurantService {
 
         return RestaurantResponseDTO.fromEntity(restaurant);
     }
+    public RestaurantResponseDTO toggleAcceptingOrders(Integer restaurantId, boolean status){
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+        restaurant.setAcceptingOrders(status);
+        restaurant = restaurantRepository.save(restaurant);
+
+        return RestaurantResponseDTO.fromEntity(restaurant);
+    }
 }
