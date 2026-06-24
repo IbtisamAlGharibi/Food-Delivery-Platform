@@ -85,4 +85,16 @@ public class ReviewService {
         }
         return responseList;
     }
+    public List<ReviewResponseDTO> getDriverReviews(Integer driverId) {
+        deliveryDriverRepository.findById(driverId)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
+        List<Review> reviews = reviewRepository.findByDeliveryDriverIdAndIsActiveTrue(driverId);
+        List<ReviewResponseDTO> responseList = new ArrayList<>();
+
+        for (Review review : reviews) {
+            ReviewResponseDTO dto = ReviewResponseDTO.fromEntity(review);
+            responseList.add(dto);
+        }
+        return responseList;
+    }
 }
