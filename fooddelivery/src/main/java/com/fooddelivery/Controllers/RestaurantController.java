@@ -1,5 +1,6 @@
 package com.fooddelivery.Controllers;
 
+import com.fooddelivery.DTO.RequestDTOs.MenuItemRequestDTO;
 import com.fooddelivery.DTO.RequestDTOs.RestaurantRequestDTO;
 import com.fooddelivery.DTO.ResponseDTOs.ComboMealResponseDTO;
 import com.fooddelivery.DTO.ResponseDTOs.MenuItemResponseDTO;
@@ -54,5 +55,11 @@ public class RestaurantController {
     @GetMapping("/{id}/combos")
     public ResponseEntity<List<ComboMealResponseDTO>> getCombos(@PathVariable Integer id) {
         return ResponseEntity.ok(restaurantService.getCombosForRestaurant(id));
+    }
+    @PostMapping("/{id}/menu")
+    public ResponseEntity<MenuItemResponseDTO> addMenuItem(@PathVariable Integer id,
+            @Valid @RequestBody MenuItemRequestDTO dto) {
+        MenuItemResponseDTO item = restaurantService.addMenuItem(id, dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(item);
     }
 }
