@@ -98,4 +98,11 @@ public class CustomerService {
     public List<CustomerResponseDTO> getAllCustomers() {
         return customerRepository.getAllCustomers();
     }
+    public CustomerResponseDTO getCustomerByEmail(String email) {
+        Customer customer = customerRepository.findByEmail(email);
+        if (customer == null) {
+            throw new ResourceNotFoundException("Customer not found");
+        }
+        return CustomerResponseDTO.fromEntity(customer);
+    }
 }
