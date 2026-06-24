@@ -144,4 +144,12 @@ public class DeliveryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Delivery not found"));
         return DeliveryResponseDTO.fromEntity(delivery);
     }
+    public List<DeliveryResponseDTO> getDeliveriesByStatus(String status) {
+        List<Delivery> deliveries = deliveryRepository.findDeliveryByStatus(status);
+        List<DeliveryResponseDTO> result = new ArrayList<>();
+        for (Delivery delivery : deliveries) {
+            result.add(DeliveryResponseDTO.fromEntity(delivery));
+        }
+        return result;
+    }
 }
