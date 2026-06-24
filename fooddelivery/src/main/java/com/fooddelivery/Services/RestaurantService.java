@@ -8,6 +8,7 @@ import com.fooddelivery.Entities.Restaurant;
 import com.fooddelivery.Entities.RestaurantOwner;
 import com.fooddelivery.Exceptions.ResourceNotFoundException;
 import com.fooddelivery.Repositories.MenuItemRepository;
+import com.fooddelivery.Repositories.RestaurantOwnerRepository;
 import com.fooddelivery.Repositories.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,15 +20,17 @@ import java.util.List;
 public class RestaurantService {
     RestaurantRepository restaurantRepository;
     MenuItemRepository menuItemRepository;
+    RestaurantOwnerRepository restaurantOwnerRepository;
     @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository,MenuItemRepository menuItemRepository) {
+    public RestaurantService(RestaurantRepository restaurantRepository,MenuItemRepository menuItemRepository,RestaurantOwnerRepository restaurantOwnerRepository) {
         this.restaurantRepository = restaurantRepository;
         this.menuItemRepository = menuItemRepository;
+        this.restaurantOwnerRepository= restaurantOwnerRepository;
     }
 
     public RestaurantResponseDTO createRestaurant(RestaurantRequestDTO dto, Integer ownerId){
-        RestaurantOwner owner = restaurantRepository.findById(ownerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Owner not found")).getRestaurantOwner();
+        RestaurantOwner owner = restaurantOwnerRepository.findById(ownerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Owner not found"));
 
         Restaurant restaurant = dto.toEntity();
         restaurant.setName(dto.getName());
@@ -93,5 +96,13 @@ public class RestaurantService {
             item.setPrice(newPrice);
             menuItemRepository.save(item);
         }
+    }
+    public List<RestaurantResponseDTO> getAllRestaurants() {
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        List<RestaurantResponseDTO> result = new ArrayList<>();
+        for (Restaurant restaurant : restaurants) {
+            result.add(RestaurantResponseDTO.fromEntity(restaurant));
+        }
+        return result;
     }
 }
