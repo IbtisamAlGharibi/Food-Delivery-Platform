@@ -126,4 +126,12 @@ public class RestaurantService {
 
         return MenuItemResponseDTO.fromEntity(item);
     }
+    public MenuItemResponseDTO updateMenuItemAvailability(Integer itemId, boolean status) {
+        MenuItem item = menuItemRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Menu item not found"));
+        item.setAvailable(status);
+        item = menuItemRepository.save(item);
+
+        return MenuItemResponseDTO.fromEntity(item);
+    }
 }
