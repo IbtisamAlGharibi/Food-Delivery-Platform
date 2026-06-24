@@ -17,14 +17,17 @@ public class ReviewService {
     RestaurantRepository restaurantRepository;
     OrderRepository orderRepository;
     DeliveryRepository deliveryRepository;
+    DeliveryDriverRepository deliveryDriverRepository;
     @Autowired
     public ReviewService(ReviewRepository reviewRepository, CustomerRepository customerRepository,
-                         RestaurantRepository restaurantRepository, OrderRepository orderRepository,DeliveryRepository deliveryRepository) {
+                         RestaurantRepository restaurantRepository, OrderRepository orderRepository,
+                         DeliveryRepository deliveryRepository, DeliveryDriverRepository deliveryDriverRepository) {
         this.reviewRepository = reviewRepository;
         this.customerRepository = customerRepository;
         this.restaurantRepository = restaurantRepository;
         this.orderRepository = orderRepository;
         this.deliveryRepository= deliveryRepository;
+        this.deliveryDriverRepository = deliveryDriverRepository;
     }
     public ReviewResponseDTO leaveRestaurantReview(Integer customerId,
                                                    Integer restaurantId, int rating,String comment){
