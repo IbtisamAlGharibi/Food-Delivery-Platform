@@ -56,4 +56,8 @@ public class CustomerController {
     public ResponseEntity<List<CustomerAddressResponseDTO>> getCustomerAddresses(@PathVariable Integer id) {
         return ResponseEntity.ok(customerService.getAllCustomerAddresses(id));
     }
+    @PutMapping("/addresses/{addressId}/default")
+    public ResponseEntity<CustomerAddressResponseDTO> setDefaultAddress(@PathVariable Integer addressId) {
+        return ResponseEntity.ok(customerService.setDefaultAddress(addressId));
+    }
 }
