@@ -105,4 +105,9 @@ public class RestaurantService {
         }
         return result;
     }
+    public RestaurantResponseDTO getRestaurantById(Integer restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+        return RestaurantResponseDTO.fromEntity(restaurant);
+    }
 }
