@@ -46,5 +46,9 @@ public class DriverController {
     public ResponseEntity<List<DeliveryResponseDTO>> getDeliveryHistory(@PathVariable Integer id) {
         return ResponseEntity.ok(deliveryService.getDeliveriesForDriver(id, "DELIVERED"));
     }
+    @GetMapping("/{id}/deliveries/active")
+    public ResponseEntity<List<DeliveryResponseDTO>> getActiveDeliveries(@PathVariable Integer id) {
+        return ResponseEntity.ok(deliveryService.getDeliveriesForDriver(id, "ASSIGNED"));
+    }
 
 }
