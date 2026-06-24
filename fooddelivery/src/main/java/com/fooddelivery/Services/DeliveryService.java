@@ -131,4 +131,12 @@ public class DeliveryService {
         }
         return result;
     }
+    public List<DeliveryDriverResponseDTO> getOnlineDrivers() {
+        List<DeliveryDriver> drivers = deliveryDriverRepository.getOnlineDrivers();
+        List<DeliveryDriverResponseDTO> result = new ArrayList<>();
+        for (DeliveryDriver driver : drivers) {
+            result.add(DeliveryDriverResponseDTO.fromEntity(driver));
+        }
+        return result;
+    }
 }
