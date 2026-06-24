@@ -1,6 +1,8 @@
 package com.fooddelivery.Controllers;
 
+import com.fooddelivery.DTO.RequestDTOs.CorporateOrderRequestDTO;
 import com.fooddelivery.DTO.RequestDTOs.OrderItemRequestDTO;
+import com.fooddelivery.DTO.ResponseDTOs.CorporateOrderResponseDTO;
 import com.fooddelivery.DTO.ResponseDTOs.OrderResponseDTO;
 import com.fooddelivery.Services.OrderService;
 import jakarta.validation.Valid;
@@ -60,5 +62,10 @@ public class OrderController {
     public ResponseEntity<List<OrderResponseDTO>> getRestaurantOrders(@PathVariable Integer restaurantId,
             @RequestParam String status) {
         return ResponseEntity.ok(orderService.getOrdersByRestaurantAndStatus(restaurantId, status));
+    }
+    @PostMapping("/corporate")
+    public ResponseEntity<CorporateOrderResponseDTO> createCorporateOrder(@Valid @RequestBody CorporateOrderRequestDTO dto) {
+        CorporateOrderResponseDTO corporateOrder = orderService.placeCorporateOrder(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(corporateOrder);
     }
 }
