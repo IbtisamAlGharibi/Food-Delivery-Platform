@@ -11,6 +11,7 @@ import com.fooddelivery.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -152,5 +153,17 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
         return OrderResponseDTO.fromEntity(order);
+    }
+    public List<OrderResponseDTO> getOrdersByRestaurantAndStatus(Integer restaurantId, String status) {
+        restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+
+        List<Order> orders = orderRepository.findByRestaurantIdAndStatus(restaurantId, status);
+        List<OrderResponseDTO> result = new ArrayList<>();
+
+        for (Order order : orders) {
+            result.add(OrderResponseDTO.fromEntity(order));
+        }
+        return result;
     }
 }
