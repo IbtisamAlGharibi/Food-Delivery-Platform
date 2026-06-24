@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -54,5 +55,10 @@ public class OrderController {
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponseDTO> getOrderById(@PathVariable Integer id) {
         return ResponseEntity.ok(orderService.getOrderById(id));
+    }
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<List<OrderResponseDTO>> getRestaurantOrders(@PathVariable Integer restaurantId,
+            @RequestParam String status) {
+        return ResponseEntity.ok(orderService.getOrdersByRestaurantAndStatus(restaurantId, status));
     }
 }
