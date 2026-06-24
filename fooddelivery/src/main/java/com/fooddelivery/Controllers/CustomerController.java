@@ -52,4 +52,8 @@ public class CustomerController {
         CustomerAddressResponseDTO address = customerService.addAddress(id, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(address);
     }
+    @GetMapping("/{id}/addresses")
+    public ResponseEntity<List<CustomerAddressResponseDTO>> getCustomerAddresses(@PathVariable Integer id) {
+        return ResponseEntity.ok(customerService.getAllCustomerAddresses(id));
+    }
 }
