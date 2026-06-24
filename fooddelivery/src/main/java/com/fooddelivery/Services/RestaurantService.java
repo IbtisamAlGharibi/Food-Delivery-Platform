@@ -2,8 +2,10 @@ package com.fooddelivery.Services;
 
 import com.fooddelivery.DTO.RequestDTOs.MenuItemRequestDTO;
 import com.fooddelivery.DTO.RequestDTOs.RestaurantRequestDTO;
+import com.fooddelivery.DTO.ResponseDTOs.ComboMealResponseDTO;
 import com.fooddelivery.DTO.ResponseDTOs.MenuItemResponseDTO;
 import com.fooddelivery.DTO.ResponseDTOs.RestaurantResponseDTO;
+import com.fooddelivery.Entities.ComboMeal;
 import com.fooddelivery.Entities.MenuItem;
 import com.fooddelivery.Entities.Restaurant;
 import com.fooddelivery.Entities.RestaurantOwner;
@@ -133,5 +135,15 @@ public class RestaurantService {
         item = menuItemRepository.save(item);
 
         return MenuItemResponseDTO.fromEntity(item);
+    }
+    public List<ComboMealResponseDTO> getCombosForRestaurant(Integer restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+
+        List<ComboMealResponseDTO> result = new ArrayList<>();
+        for (ComboMeal combo : restaurant.getComboMealList()) {
+            result.add(ComboMealResponseDTO.fromEntity(combo));
+        }
+        return result;
     }
 }
