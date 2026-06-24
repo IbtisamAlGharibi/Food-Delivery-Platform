@@ -27,7 +27,7 @@ public class PaymentService {
         Payment payment = new Payment();
         payment.setTransactionRef(order.getOrderCode());
         payment.setPaymentMethod(method);
-        payment.setStatus("PAID");
+        payment.setStatus("PENDING");
         payment.setAmount(order.getTotalAmount());
         payment.setProcessedAt(LocalDateTime.now());
         payment = paymentRepository.save(payment);
