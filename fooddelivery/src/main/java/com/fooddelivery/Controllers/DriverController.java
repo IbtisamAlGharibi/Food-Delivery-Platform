@@ -2,6 +2,7 @@ package com.fooddelivery.Controllers;
 
 import com.fooddelivery.DTO.RequestDTOs.DeliveryDriverRequestDTO;
 import com.fooddelivery.DTO.ResponseDTOs.DeliveryDriverResponseDTO;
+import com.fooddelivery.DTO.ResponseDTOs.DeliveryResponseDTO;
 import com.fooddelivery.Services.DeliveryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,4 +42,9 @@ public class DriverController {
             @RequestParam double lng) {
         return ResponseEntity.ok(deliveryService.updateDriverLocation(id, lat, lng));
     }
+    @GetMapping("/{id}/deliveries")
+    public ResponseEntity<List<DeliveryResponseDTO>> getDeliveryHistory(@PathVariable Integer id) {
+        return ResponseEntity.ok(deliveryService.getDeliveriesForDriver(id, "DELIVERED"));
+    }
+
 }
