@@ -39,4 +39,8 @@ public class OrderController {
     public ResponseEntity<OrderResponseDTO> applyDiscount(@PathVariable Integer id, @PathVariable double amount) {
         return ResponseEntity.ok(orderService.applyDiscount(id, amount));
     }
+    @PutMapping("/{id}/confirm")
+    public ResponseEntity<OrderResponseDTO> confirmOrder(@PathVariable Integer id) {
+        return ResponseEntity.ok(orderService.confirmOrder(id));
+    }
 }
