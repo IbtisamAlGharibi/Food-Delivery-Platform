@@ -36,4 +36,8 @@ public class CustomerController {
     public ResponseEntity<CustomerResponseDTO> deactivateCustomer(@PathVariable Integer id) {
         return ResponseEntity.ok(customerService.deactivateCustomer(id));
     }
+    @PutMapping("/{id}/loyalty/add/{points}")
+    public ResponseEntity<CustomerResponseDTO> addLoyaltyPoints(@PathVariable Integer id, @PathVariable int points) {
+        return ResponseEntity.ok(customerService.updateLoyaltyPoints(id, points));
+    }
 }
