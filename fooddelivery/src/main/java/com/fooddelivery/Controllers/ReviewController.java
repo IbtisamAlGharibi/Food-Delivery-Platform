@@ -1,9 +1,11 @@
 package com.fooddelivery.Controllers;
 
+import com.fooddelivery.DTO.ResponseDTOs.ReviewResponseDTO;
 import com.fooddelivery.Services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -12,5 +14,12 @@ public class ReviewController {
     @Autowired
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
+    }
+    @PostMapping("/restaurant/{restaurantId}/customer/{customerId}")
+    public ResponseEntity<ReviewResponseDTO> submitRestaurantReview(@PathVariable Integer restaurantId, @PathVariable Integer customerId,
+            @RequestParam int rating, @RequestParam String comment) {
+        ReviewResponseDTO response = reviewService.leaveRestaurantReview(customerId, restaurantId, rating, comment);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
