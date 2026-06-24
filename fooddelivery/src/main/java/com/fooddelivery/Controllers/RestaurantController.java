@@ -62,4 +62,9 @@ public class RestaurantController {
         MenuItemResponseDTO item = restaurantService.addMenuItem(id, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(item);
     }
+    @PutMapping("/menu/{itemId}/available")
+    public ResponseEntity<MenuItemResponseDTO> updateAvailability(@PathVariable Integer itemId,
+            @RequestParam boolean status) {
+        return ResponseEntity.ok(restaurantService.updateMenuItemAvailability(itemId, status));
+    }
 }
