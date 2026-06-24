@@ -64,4 +64,9 @@ public class CustomerController {
     public ResponseEntity<CustomerAddressResponseDTO> setDefaultAddress(@PathVariable Integer addressId) {
         return ResponseEntity.ok(customerService.setDefaultAddress(addressId));
     }
+    @DeleteMapping("/addresses/{addressId}")
+    public ResponseEntity<Void> deleteAddress(@PathVariable Integer addressId) {
+        customerService.deleteAddress(addressId);
+        return ResponseEntity.noContent().build();
+    }
 }
