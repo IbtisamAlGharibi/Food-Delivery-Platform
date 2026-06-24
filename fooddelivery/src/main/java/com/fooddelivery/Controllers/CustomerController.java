@@ -4,6 +4,7 @@ import com.fooddelivery.DTO.RequestDTOs.CustomerAddressRequestDTO;
 import com.fooddelivery.DTO.RequestDTOs.CustomerRequestDTO;
 import com.fooddelivery.DTO.ResponseDTOs.CustomerAddressResponseDTO;
 import com.fooddelivery.DTO.ResponseDTOs.CustomerResponseDTO;
+import com.fooddelivery.DTO.ResponseDTOs.OrderResponseDTO;
 import com.fooddelivery.Services.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +69,9 @@ public class CustomerController {
     public ResponseEntity<Void> deleteAddress(@PathVariable Integer addressId) {
         customerService.deleteAddress(addressId);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/{id}/orders")
+    public ResponseEntity<List<OrderResponseDTO>> getCustomerOrders(@PathVariable Integer id) {
+        return ResponseEntity.ok(customerService.getCustomerOrders(id));
     }
 }
