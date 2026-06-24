@@ -4,11 +4,13 @@ import com.fooddelivery.DTO.ResponseDTOs.ReviewResponseDTO;
 import com.fooddelivery.Entities.*;
 import com.fooddelivery.Exceptions.ResourceNotFoundException;
 import com.fooddelivery.Repositories.*;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -96,5 +98,12 @@ public class ReviewService {
             responseList.add(dto);
         }
         return responseList;
+    }
+    public void deleteReview(Integer reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
+        review.setActive(false);
+        review.setUpdatedDate(new Date());
+        reviewRepository.save(review);
     }
 }
