@@ -21,4 +21,8 @@ public class DeliveryController {
     public ResponseEntity<DeliveryResponseDTO> assignManual(@PathVariable Integer orderId, @PathVariable Integer driverId) {
         return ResponseEntity.ok(deliveryService.assignDriverToOrder(orderId, driverId));
     }
+    @PostMapping("/order/{orderId}/assignAuto")
+    public ResponseEntity<DeliveryResponseDTO> assignAuto(@PathVariable Integer orderId) {
+        return ResponseEntity.ok(deliveryService.autoAssignDriver(orderId));
+    }
 }
