@@ -9,4 +9,6 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review,Integer> {
     @Query("select r from Review r where r.restaurant.isActive=true and r.restaurant.id=:restaurantId")
     List<Review> findByRestaurantIdAndIsActiveTrue(Integer restaurantId);
+    @Query("select r from Review r where r.deliveryDriver.isActive=true and r.deliveryDriver.driverCode=:driverId")
+    List<Review> findByDeliveryDriverIdAndIsActiveTrue(Integer driverId);
 }
