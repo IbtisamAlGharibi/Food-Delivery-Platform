@@ -41,4 +41,8 @@ public class RestaurantController {
     public ResponseEntity<RestaurantResponseDTO> toggleOrders(@PathVariable Integer id, @RequestParam boolean accepting) {
         return ResponseEntity.ok(restaurantService.toggleAcceptingOrders(id, accepting));
     }
+    @PutMapping("/{id}/fee/{newFee}")
+    public ResponseEntity<RestaurantResponseDTO> updateDeliveryFee(@PathVariable Integer id, @PathVariable double newFee) {
+        return ResponseEntity.ok(restaurantService.updateDeliveryFee(id, newFee));
+    }
 }
