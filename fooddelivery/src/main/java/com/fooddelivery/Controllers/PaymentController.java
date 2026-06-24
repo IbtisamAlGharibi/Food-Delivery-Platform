@@ -28,5 +28,8 @@ public class PaymentController {
     public ResponseEntity<PaymentResponseDTO> refundPayment(@PathVariable Integer paymentId) {
         return ResponseEntity.ok(paymentService.refundPayment(paymentId));
     }
-
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<PaymentResponseDTO> getPaymentByOrder(@PathVariable Integer orderId) {
+        return ResponseEntity.ok(paymentService.getPaymentByOrder(orderId));
+    }
 }
