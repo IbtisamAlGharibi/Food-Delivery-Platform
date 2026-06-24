@@ -4,8 +4,10 @@ import com.fooddelivery.DTO.RequestDTOs.CustomerAddressRequestDTO;
 import com.fooddelivery.DTO.RequestDTOs.CustomerRequestDTO;
 import com.fooddelivery.DTO.ResponseDTOs.CustomerAddressResponseDTO;
 import com.fooddelivery.DTO.ResponseDTOs.CustomerResponseDTO;
+import com.fooddelivery.DTO.ResponseDTOs.OrderResponseDTO;
 import com.fooddelivery.Entities.Customer;
 import com.fooddelivery.Entities.CustomerAddress;
+import com.fooddelivery.Entities.Order;
 import com.fooddelivery.Exceptions.ResourceNotFoundException;
 import com.fooddelivery.Repositories.CustomerAddressRepository;
 import com.fooddelivery.Repositories.CustomerRepository;
@@ -135,5 +137,16 @@ public class CustomerService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
         return CustomerResponseDTO.fromEntity(customer);
+    }
+    public List<OrderResponseDTO> getCustomerOrders(Integer customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+
+        List<OrderResponseDTO> orderResponseList = new ArrayList<>();
+        for (Order order : customer.getOrderList()) {
+            OrderResponseDTO dto = OrderResponseDTO.fromEntity(order);
+            orderResponseList.add(dto);
+        }
+        return orderResponseList;
     }
 }
