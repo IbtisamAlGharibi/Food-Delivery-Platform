@@ -17,4 +17,6 @@ public interface CustomerRepository  extends JpaRepository<Customer,Integer> {
     List<Customer> findByLoyaltyPointsGreaterThanEqual(@Param("points") int points);
     @Query("SELECT c FROM Customer c WHERE c.isActive=true AND c.createdDate BETWEEN :createdDate AND CURRENT_TIMESTAMP")
     List<Customer> CustomerRegisterWithDateRange(@Param("createdDate") Date createdDate);
+    @Query("select c from Customer c where c.isActive=true")
+    List<Customer> getAllCustomers();
 }
