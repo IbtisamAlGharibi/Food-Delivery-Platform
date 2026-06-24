@@ -148,4 +148,9 @@ public class OrderService {
 
         return CorporateOrderResponseDTO.fromEntity(corporateOrder);
     }
+    public OrderResponseDTO getOrderById(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        return OrderResponseDTO.fromEntity(order);
+    }
 }
