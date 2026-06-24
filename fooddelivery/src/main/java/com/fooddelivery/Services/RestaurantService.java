@@ -1,5 +1,6 @@
 package com.fooddelivery.Services;
 
+import com.fooddelivery.DTO.RequestDTOs.ComboMealRequestDTO;
 import com.fooddelivery.DTO.RequestDTOs.MenuItemRequestDTO;
 import com.fooddelivery.DTO.RequestDTOs.RestaurantRequestDTO;
 import com.fooddelivery.DTO.ResponseDTOs.ComboMealResponseDTO;
@@ -10,6 +11,7 @@ import com.fooddelivery.Entities.MenuItem;
 import com.fooddelivery.Entities.Restaurant;
 import com.fooddelivery.Entities.RestaurantOwner;
 import com.fooddelivery.Exceptions.ResourceNotFoundException;
+import com.fooddelivery.Repositories.ComboMealRepository;
 import com.fooddelivery.Repositories.MenuItemRepository;
 import com.fooddelivery.Repositories.RestaurantOwnerRepository;
 import com.fooddelivery.Repositories.RestaurantRepository;
@@ -24,11 +26,13 @@ public class RestaurantService {
     RestaurantRepository restaurantRepository;
     MenuItemRepository menuItemRepository;
     RestaurantOwnerRepository restaurantOwnerRepository;
+    ComboMealRepository comboMealRepository;
     @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository,MenuItemRepository menuItemRepository,RestaurantOwnerRepository restaurantOwnerRepository) {
+    public RestaurantService(RestaurantRepository restaurantRepository,MenuItemRepository menuItemRepository,RestaurantOwnerRepository restaurantOwnerRepository,ComboMealRepository  comboMealRepository) {
         this.restaurantRepository = restaurantRepository;
         this.menuItemRepository = menuItemRepository;
         this.restaurantOwnerRepository= restaurantOwnerRepository;
+        this.comboMealRepository = comboMealRepository;
     }
 
     public RestaurantResponseDTO createRestaurant(RestaurantRequestDTO dto, Integer ownerId){
@@ -145,5 +149,22 @@ public class RestaurantService {
             result.add(ComboMealResponseDTO.fromEntity(combo));
         }
         return result;
+    }
+    public ComboMealResponseDTO createComboMeal(Integer restaurantId, ComboMealRequestDTO dto) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+
+        ComboMeal comboMeal = dto.toEntity();
+        comboMeal.setComboName(dto.getComboName());
+        comboMeal.setDescription(dto.getDescription());
+        comboMeal.setTotalPrice(dto.getTotalPrice());
+        comboMeal.setAvailable(dto.isAvailable());
+
+        comboMeal.setRestaurant(restaurant);
+        comboMeal = comboMealRepository.save(comboMeal);
+        restaurant.getComboMealList().add(comboMeal);
+        restaurantRepository.save(restaurant);
+
+        return ComboMealResponseDTO.fromEntity(comboMeal);
     }
 }
