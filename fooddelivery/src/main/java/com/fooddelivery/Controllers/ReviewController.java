@@ -35,4 +35,9 @@ public class ReviewController {
     public ResponseEntity<List<ReviewResponseDTO>> getRestaurantReviews(@PathVariable Integer restaurantId) {
         return ResponseEntity.ok(reviewService.getRestaurantReviews(restaurantId));
     }
+    @GetMapping("/driver/{driverId}")
+    public ResponseEntity<List<ReviewResponseDTO>> getDriverReviews(@PathVariable Integer driverId) {
+        return ResponseEntity.ok(reviewService.getDriverReviews(driverId));
+    }
+
 }
