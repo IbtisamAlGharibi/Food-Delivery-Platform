@@ -30,6 +30,10 @@ public class CustomerController {
     public ResponseEntity<List<CustomerResponseDTO>> getAllCustomers() {
         return ResponseEntity.ok(customerService.getAllCustomers());
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable Integer id) {
+        return ResponseEntity.ok(customerService.getCustomerById(id));
+    }
     @GetMapping("/email/{email}")
     public ResponseEntity<CustomerResponseDTO> getCustomerByEmail(@PathVariable String email) {
         return ResponseEntity.ok(customerService.getCustomerByEmail(email));
