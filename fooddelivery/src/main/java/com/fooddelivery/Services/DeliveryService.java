@@ -31,8 +31,8 @@ public class DeliveryService {
     public DeliveryResponseDTO assignDriverToOrder(Integer orderId, Integer driverId){
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
-        DeliveryDriver driver = deliveryRepository.findById(driverId)
-                .orElseThrow(() -> new ResourceNotFoundException("Driver not found")).getDeliveryDriver();
+        DeliveryDriver driver = deliveryDriverRepository.findById(driverId)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
 
         Delivery delivery = new Delivery();
         delivery.setOrder(order);
@@ -138,5 +138,10 @@ public class DeliveryService {
             result.add(DeliveryDriverResponseDTO.fromEntity(driver));
         }
         return result;
+    }
+    public DeliveryResponseDTO getDeliveryById(Integer id) {
+        Delivery delivery = deliveryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Delivery not found"));
+        return DeliveryResponseDTO.fromEntity(delivery);
     }
 }
