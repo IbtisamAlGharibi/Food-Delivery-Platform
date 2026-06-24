@@ -1,5 +1,6 @@
 package com.fooddelivery.Services;
 
+import com.fooddelivery.DTO.RequestDTOs.MenuItemRequestDTO;
 import com.fooddelivery.DTO.RequestDTOs.RestaurantRequestDTO;
 import com.fooddelivery.DTO.ResponseDTOs.MenuItemResponseDTO;
 import com.fooddelivery.DTO.ResponseDTOs.RestaurantResponseDTO;
@@ -109,5 +110,20 @@ public class RestaurantService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
         return RestaurantResponseDTO.fromEntity(restaurant);
+    }
+    public MenuItemResponseDTO addMenuItem(Integer restaurantId, MenuItemRequestDTO dto) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+
+        MenuItem item = dto.toEntity();
+        item.setName(dto.getName());
+        item.setDescription(dto.getDescription());
+        item.setPrice(dto.getPrice());
+        item = menuItemRepository.save(item);
+
+        restaurant.getMenuItemList().add(item);
+        restaurantRepository.save(restaurant);
+
+        return MenuItemResponseDTO.fromEntity(item);
     }
 }
