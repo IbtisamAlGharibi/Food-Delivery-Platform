@@ -124,4 +124,11 @@ public class CustomerService {
         customerAddressRepository.save(address);
         return CustomerAddressResponseDTO.fromEntity(address);
     }
+
+    public void deleteAddress(Integer addressId) {
+        CustomerAddress address = customerAddressRepository.findById(addressId)
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found"));
+        address.setActive(false);
+        customerAddressRepository.save(address);
+    }
 }
