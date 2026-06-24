@@ -77,7 +77,7 @@ public class OrderService {
         item.setQuantity(quantity);
         item.setUnitPrice(menuItem.getPrice());
         item.setTotalPrice(quantity * menuItem.getPrice());
-        item = (OrderItem) orderItemRepository.save(item);
+        item = orderItemRepository.save(item);
         order.getOrderItemList().add(item);
         orderRepository.save(order);
 
