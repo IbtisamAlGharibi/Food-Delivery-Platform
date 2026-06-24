@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -72,5 +73,16 @@ public class ReviewService {
         review = reviewRepository.save(review);
 
         return ReviewResponseDTO.fromEntity(review);
+    }
+    public List<ReviewResponseDTO> getRestaurantReviews(Integer restaurantId) {
+        restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+        List<Review> reviews = reviewRepository.findByRestaurantIdAndIsActiveTrue(restaurantId);
+        List<ReviewResponseDTO> responseList = new ArrayList<>();
+        for (Review review : reviews) {
+            ReviewResponseDTO dto = ReviewResponseDTO.fromEntity(review);
+            responseList.add(dto);
+        }
+        return responseList;
     }
 }
