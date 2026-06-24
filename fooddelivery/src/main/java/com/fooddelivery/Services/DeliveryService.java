@@ -1,11 +1,13 @@
 package com.fooddelivery.Services;
 
+import com.fooddelivery.DTO.RequestDTOs.DeliveryDriverRequestDTO;
 import com.fooddelivery.DTO.ResponseDTOs.DeliveryDriverResponseDTO;
 import com.fooddelivery.DTO.ResponseDTOs.DeliveryResponseDTO;
 import com.fooddelivery.Entities.Delivery;
 import com.fooddelivery.Entities.DeliveryDriver;
 import com.fooddelivery.Entities.Order;
 import com.fooddelivery.Exceptions.ResourceNotFoundException;
+import com.fooddelivery.Repositories.DeliveryDriverRepository;
 import com.fooddelivery.Repositories.DeliveryRepository;
 import com.fooddelivery.Repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,12 @@ import java.util.List;
 public class DeliveryService {
     DeliveryRepository deliveryRepository;
     OrderRepository orderRepository;
+    DeliveryDriverRepository deliveryDriverRepository;
     @Autowired
-    public DeliveryService(DeliveryRepository deliveryRepository, OrderRepository orderRepository) {
+    public DeliveryService(DeliveryRepository deliveryRepository, OrderRepository orderRepository,DeliveryDriverRepository deliveryDriverRepository) {
         this.deliveryRepository = deliveryRepository;
         this.orderRepository = orderRepository;
+        this.deliveryDriverRepository=deliveryDriverRepository;
     }
     public DeliveryResponseDTO assignDriverToOrder(Integer orderId, Integer driverId){
         Order order = orderRepository.findById(orderId)
@@ -112,5 +116,11 @@ public class DeliveryService {
             }
         }
         throw new ResourceNotFoundException("Driver not found");
+    }
+    public DeliveryDriverResponseDTO createDriver(DeliveryDriverRequestDTO dto) {
+        DeliveryDriver driver = dto.toEntity();
+        driver.setOnline(dto.isOnline());
+        driver = deliveryDriverRepository.save(driver);
+        return DeliveryDriverResponseDTO.fromEntity(driver);
     }
 }
