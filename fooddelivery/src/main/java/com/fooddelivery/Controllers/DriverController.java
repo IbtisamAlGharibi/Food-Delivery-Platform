@@ -32,4 +32,8 @@ public class DriverController {
     public ResponseEntity<List<DeliveryDriverResponseDTO>> getOnlineDrivers() {
         return ResponseEntity.ok(deliveryService.getOnlineDrivers());
     }
+    @PutMapping("/{id}/status")
+    public ResponseEntity<DeliveryDriverResponseDTO> updateStatus(@PathVariable Integer id, @RequestParam boolean isOnline) {
+        return ResponseEntity.ok(deliveryService.toggleDriverOnlineStatus(id, isOnline));
+    }
 }
