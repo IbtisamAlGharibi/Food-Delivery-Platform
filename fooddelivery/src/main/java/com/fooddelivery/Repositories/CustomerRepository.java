@@ -1,5 +1,6 @@
 package com.fooddelivery.Repositories;
 
+import com.fooddelivery.DTO.ResponseDTOs.CustomerResponseDTO;
 import com.fooddelivery.Entities.Customer;
 import lombok.Data;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +19,5 @@ public interface CustomerRepository  extends JpaRepository<Customer,Integer> {
     @Query("SELECT c FROM Customer c WHERE c.isActive=true AND c.createdDate BETWEEN :createdDate AND CURRENT_TIMESTAMP")
     List<Customer> CustomerRegisterWithDateRange(@Param("createdDate") Date createdDate);
     @Query("select c from Customer c where c.isActive=true")
-    List<Customer> getAllCustomers();
+    List<CustomerResponseDTO> getAllCustomers();
 }
