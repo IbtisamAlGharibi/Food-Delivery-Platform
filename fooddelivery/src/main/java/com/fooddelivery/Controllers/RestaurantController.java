@@ -1,6 +1,7 @@
 package com.fooddelivery.Controllers;
 
 import com.fooddelivery.DTO.RequestDTOs.RestaurantRequestDTO;
+import com.fooddelivery.DTO.ResponseDTOs.MenuItemResponseDTO;
 import com.fooddelivery.DTO.ResponseDTOs.RestaurantResponseDTO;
 import com.fooddelivery.Services.RestaurantService;
 import jakarta.validation.Valid;
@@ -44,5 +45,9 @@ public class RestaurantController {
     @PutMapping("/{id}/fee/{newFee}")
     public ResponseEntity<RestaurantResponseDTO> updateDeliveryFee(@PathVariable Integer id, @PathVariable double newFee) {
         return ResponseEntity.ok(restaurantService.updateDeliveryFee(id, newFee));
+    }
+    @GetMapping("/{id}/menu")
+    public ResponseEntity<List<MenuItemResponseDTO>> getMenu(@PathVariable Integer id) {
+        return ResponseEntity.ok(restaurantService.getMenuForRestaurant(id));
     }
 }
