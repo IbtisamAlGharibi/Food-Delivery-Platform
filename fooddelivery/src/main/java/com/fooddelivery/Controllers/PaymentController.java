@@ -20,4 +20,9 @@ public class PaymentController {
         PaymentResponseDTO response = paymentService.processPayment(orderId, method);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+    @PutMapping("/{paymentId}/complete")
+    public ResponseEntity<PaymentResponseDTO> completePayment(@PathVariable Integer paymentId) {
+        return ResponseEntity.ok(paymentService.completePayment(paymentId));
+    }
+
 }
