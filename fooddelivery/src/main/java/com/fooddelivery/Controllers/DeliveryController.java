@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/deliveries")
 public class DeliveryController {
@@ -33,5 +35,9 @@ public class DeliveryController {
     @PutMapping("/{id}/complete")
     public ResponseEntity<DeliveryResponseDTO> complete(@PathVariable Integer id) {
         return ResponseEntity.ok(deliveryService.markDeliveryDelivered(id));
+    }
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<DeliveryResponseDTO>> getByStatus(@PathVariable String status) {
+        return ResponseEntity.ok(deliveryService.getDeliveriesByStatus(status));
     }
 }
