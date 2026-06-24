@@ -106,7 +106,7 @@ public class CustomerService {
         }
         return CustomerResponseDTO.fromEntity(customer);
     }
-    public List<CustomerAddressResponseDTO> getCustomerAddresses(Integer customerId) {
+    public List<CustomerAddressResponseDTO> getAllCustomerAddresses(Integer customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
         List<CustomerAddressResponseDTO> addressResponseList = new ArrayList<>();
@@ -115,5 +115,13 @@ public class CustomerService {
             addressResponseList.add(dto);
         }
         return addressResponseList;
+    }
+    public CustomerAddressResponseDTO setDefaultAddress(Integer addressId) {
+        CustomerAddress address = customerAddressRepository.findById(addressId)
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found"));
+
+        address.setDefault(true);
+        customerAddressRepository.save(address);
+        return CustomerAddressResponseDTO.fromEntity(address);
     }
 }
