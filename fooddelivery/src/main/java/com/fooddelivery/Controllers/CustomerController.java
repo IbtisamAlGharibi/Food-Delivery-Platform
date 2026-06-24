@@ -1,6 +1,8 @@
 package com.fooddelivery.Controllers;
 
+import com.fooddelivery.DTO.RequestDTOs.CustomerAddressRequestDTO;
 import com.fooddelivery.DTO.RequestDTOs.CustomerRequestDTO;
+import com.fooddelivery.DTO.ResponseDTOs.CustomerAddressResponseDTO;
 import com.fooddelivery.DTO.ResponseDTOs.CustomerResponseDTO;
 import com.fooddelivery.Services.CustomerService;
 import jakarta.validation.Valid;
@@ -43,5 +45,11 @@ public class CustomerController {
     @PutMapping("/{id}/loyalty/deduct/{points}")
     public ResponseEntity<CustomerResponseDTO> deductLoyaltyPoints(@PathVariable Integer id, @PathVariable int points) {
         return ResponseEntity.ok(customerService.applyLoyaltyPenalty(id, points));
+    }
+    @PostMapping("/{id}/addresses")
+    public ResponseEntity<CustomerAddressResponseDTO> addAddress(@PathVariable Integer id,
+            @Valid @RequestBody CustomerAddressRequestDTO dto) {
+        CustomerAddressResponseDTO address = customerService.addAddress(id, dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(address);
     }
 }
