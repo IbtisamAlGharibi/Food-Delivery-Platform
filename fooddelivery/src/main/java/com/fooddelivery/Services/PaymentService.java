@@ -42,4 +42,13 @@ public class PaymentService {
 
         return PaymentResponseDTO.fromEntity(payment);
     }
+    public PaymentResponseDTO completePayment(Integer paymentId) {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
+        payment.setStatus("PAID");
+        payment.setProcessedAt(LocalDateTime.now());
+        payment = paymentRepository.save(payment);
+
+        return PaymentResponseDTO.fromEntity(payment);
+    }
 }
