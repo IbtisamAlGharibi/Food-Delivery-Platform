@@ -22,4 +22,11 @@ public class ReviewController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+    @PostMapping("/driver/{driverId}/customer/{customerId}")
+    public ResponseEntity<ReviewResponseDTO> submitDriverReview(@PathVariable Integer driverId, @PathVariable Integer customerId,
+            @RequestParam int rating, @RequestParam String comment) {
+        ReviewResponseDTO response = reviewService.leaveDriverReview(customerId, driverId, rating, comment);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 }
