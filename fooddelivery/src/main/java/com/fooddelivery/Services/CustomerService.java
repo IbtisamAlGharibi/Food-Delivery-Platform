@@ -12,6 +12,7 @@ import com.fooddelivery.Repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -104,5 +105,15 @@ public class CustomerService {
             throw new ResourceNotFoundException("Customer not found");
         }
         return CustomerResponseDTO.fromEntity(customer);
+    }
+    public List<CustomerAddressResponseDTO> getCustomerAddresses(Integer customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        List<CustomerAddressResponseDTO> addressResponseList = new ArrayList<>();
+        for (CustomerAddress address : customer.getCustomerAddressList()) {
+            CustomerAddressResponseDTO dto = CustomerAddressResponseDTO.fromEntity(address);
+            addressResponseList.add(dto);
+        }
+        return addressResponseList;
     }
 }
