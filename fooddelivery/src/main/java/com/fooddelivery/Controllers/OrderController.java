@@ -35,4 +35,8 @@ public class OrderController {
         orderService.removeMenuItemFromOrder(id, itemId);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/{id}/discount/{amount}")
+    public ResponseEntity<OrderResponseDTO> applyDiscount(@PathVariable Integer id, @PathVariable double amount) {
+        return ResponseEntity.ok(orderService.applyDiscount(id, amount));
+    }
 }
