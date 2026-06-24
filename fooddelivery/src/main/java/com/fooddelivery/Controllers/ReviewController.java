@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/reviews")
 public class ReviewController {
@@ -28,5 +30,9 @@ public class ReviewController {
         ReviewResponseDTO response = reviewService.leaveDriverReview(customerId, driverId, rating, comment);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<List<ReviewResponseDTO>> getRestaurantReviews(@PathVariable Integer restaurantId) {
+        return ResponseEntity.ok(reviewService.getRestaurantReviews(restaurantId));
     }
 }
