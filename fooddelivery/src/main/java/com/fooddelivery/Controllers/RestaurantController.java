@@ -73,4 +73,9 @@ public class RestaurantController {
         ComboMealResponseDTO comboMeal = restaurantService.createComboMeal(id, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(comboMeal);
     }
+    @PutMapping("/{id}/bulk-price-increase")
+    public ResponseEntity<Void> bulkPriceIncrease(@PathVariable Integer id, @RequestParam double percentage) {
+        restaurantService.bulkUpdateMenuItemPrices(id, percentage);
+        return ResponseEntity.noContent().build();
+    }
 }
