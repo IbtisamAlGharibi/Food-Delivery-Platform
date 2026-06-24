@@ -30,4 +30,9 @@ public class OrderController {
             @Valid @RequestBody OrderItemRequestDTO dto) {
         return ResponseEntity.ok(orderService.addMenuItemToOrder(id, menuItemId, dto.getQuantity()));
     }
+    @DeleteMapping("/{id}/items/{itemId}")
+    public ResponseEntity<Void> removeItem(@PathVariable Integer id, @PathVariable Integer itemId) {
+        orderService.removeMenuItemFromOrder(id, itemId);
+        return ResponseEntity.noContent().build();
+    }
 }
