@@ -24,5 +24,9 @@ public class PaymentController {
     public ResponseEntity<PaymentResponseDTO> completePayment(@PathVariable Integer paymentId) {
         return ResponseEntity.ok(paymentService.completePayment(paymentId));
     }
+    @PutMapping("/{paymentId}/refund")
+    public ResponseEntity<PaymentResponseDTO> refundPayment(@PathVariable Integer paymentId) {
+        return ResponseEntity.ok(paymentService.refundPayment(paymentId));
+    }
 
 }
