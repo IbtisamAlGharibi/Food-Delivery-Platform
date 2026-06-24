@@ -51,4 +51,8 @@ public class PaymentService {
 
         return PaymentResponseDTO.fromEntity(payment);
     }
+    public PaymentResponseDTO getPaymentByOrder(Integer orderId) {
+        Payment payment = paymentRepository.findByOrderId(orderId);
+        return PaymentResponseDTO.fromEntity(payment);
+    }
 }
