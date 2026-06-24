@@ -1,14 +1,13 @@
 package com.fooddelivery.Controllers;
 
+import com.fooddelivery.DTO.RequestDTOs.OrderItemRequestDTO;
 import com.fooddelivery.DTO.ResponseDTOs.OrderResponseDTO;
 import com.fooddelivery.Services.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
@@ -25,5 +24,10 @@ public class OrderController {
             @PathVariable Integer restaurantId) {
         OrderResponseDTO order = orderService.createOrder(customerId, restaurantId, Collections.emptyList());
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
+    }
+    @PostMapping("/{id}/items/{menuItemId}")
+    public ResponseEntity<OrderResponseDTO> addItem(@PathVariable Integer id, @PathVariable Integer menuItemId,
+            @Valid @RequestBody OrderItemRequestDTO dto) {
+        return ResponseEntity.ok(orderService.addMenuItemToOrder(id, menuItemId, dto.getQuantity()));
     }
 }
