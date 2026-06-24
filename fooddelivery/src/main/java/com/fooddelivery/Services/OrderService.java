@@ -166,4 +166,13 @@ public class OrderService {
         }
         return result;
     }
+    public OrderResponseDTO confirmOrder(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        order.setStatus("CONFIRMED");
+        order = orderRepository.save(order);
+
+        return OrderResponseDTO.fromEntity(order);
+    }
 }
