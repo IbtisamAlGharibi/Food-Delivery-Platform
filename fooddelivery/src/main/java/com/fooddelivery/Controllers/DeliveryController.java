@@ -30,4 +30,8 @@ public class DeliveryController {
     public ResponseEntity<DeliveryResponseDTO> pickup(@PathVariable Integer id) {
         return ResponseEntity.ok(deliveryService.markDeliveryPickedUp(id));
     }
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<DeliveryResponseDTO> complete(@PathVariable Integer id) {
+        return ResponseEntity.ok(deliveryService.markDeliveryDelivered(id));
+    }
 }
