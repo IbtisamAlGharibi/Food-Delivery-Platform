@@ -177,12 +177,6 @@ public class OrderService {
         return OrderResponseDTO.fromEntity(order);
     }
     public Double getPlatformDeliveryFees(Date start, Date end) {
-        List<Order> orders = orderRepository.findByOrderDateBetween(start, end);
-
-        double total = 0;
-        for (Order order : orders) {
-            total += order.getDeliveryFee();
-        }
-        return total;
+      return orderRepository.totalDeliveryFeesForDate(start,end);
     }
 }
