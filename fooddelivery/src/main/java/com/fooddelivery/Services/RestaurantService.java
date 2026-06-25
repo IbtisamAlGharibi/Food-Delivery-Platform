@@ -175,4 +175,9 @@ public class RestaurantService {
         }
         return revenue;
     }
+    public Long getRestaurantOrderCount(Integer restaurantId) {
+        restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+        return orderRepository.totalCompletedOrdersForRestaurant(restaurantId);
+    }
 }
