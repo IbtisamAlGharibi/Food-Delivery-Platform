@@ -182,4 +182,17 @@ public class OrderService {
     public Long getPlatformOrderCount(Date start, Date end) {
         return (long) orderRepository.findByOrderDateBetween(start, end).size();
     }
+    public OrderResponseDTO reorder(Integer orderId) {
+        Order oldOrder = orderRepository.findById(orderId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        Order newOrder = new Order();
+        newOrder.setCustomer(oldOrder.getCustomer());
+        newOrder.setRestaurant(oldOrder.getRestaurant());
+        newOrder.setStatus("PENDING");
+        newOrder.setOrderDate(new Date());
+        newOrder.setActive(true);
+        newOrder = orderRepository.save(newOrder);
+        return OrderResponseDTO.fromEntity(newOrder);
+    }
 }
