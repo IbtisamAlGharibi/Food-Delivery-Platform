@@ -12,6 +12,9 @@ import com.fooddelivery.Exceptions.ResourceNotFoundException;
 import com.fooddelivery.Repositories.CustomerAddressRepository;
 import com.fooddelivery.Repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -151,5 +154,9 @@ public class CustomerService {
     }
     public CustomerResponseDTO getTopLoyalCustomers( ) {
       return (CustomerResponseDTO) customerRepository.getTopLoyalCustomers();
+    }
+    public Page<CustomerResponseDTO> searchCustomers(String name, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return customerRepository.findByFirstName(name,pageable).map(CustomerResponseDTO::fromEntity);
     }
 }
