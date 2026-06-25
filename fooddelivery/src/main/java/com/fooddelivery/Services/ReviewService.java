@@ -6,6 +6,9 @@ import com.fooddelivery.Exceptions.ResourceNotFoundException;
 import com.fooddelivery.Repositories.*;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -117,5 +120,11 @@ public class ReviewService {
                 .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
         Double avg = reviewRepository.getDriverAverage(driverId);
         return avg != null ? avg : 0.0;
+    }
+    public Page<ReviewResponseDTO> getRestaurantReviews(Integer restaurantId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Review> reviews = reviewRepository.findByRestaurantIdAndIsActiveTrue(restaurantId, pageable);
+
+        return reviews.map(ReviewResponseDTO::fromEntity);
     }
 }
