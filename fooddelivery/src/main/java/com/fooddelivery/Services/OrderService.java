@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -174,5 +175,14 @@ public class OrderService {
         order = orderRepository.save(order);
 
         return OrderResponseDTO.fromEntity(order);
+    }
+    public Double getPlatformDeliveryFees(Date start, Date end) {
+        List<Order> orders = orderRepository.findByOrderDateBetween(start, end);
+
+        double total = 0;
+        for (Order order : orders) {
+            total += order.getDeliveryFee();
+        }
+        return total;
     }
 }
