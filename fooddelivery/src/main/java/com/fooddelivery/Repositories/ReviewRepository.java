@@ -11,4 +11,6 @@ public interface ReviewRepository extends JpaRepository<Review,Integer> {
     List<Review> findByRestaurantIdAndIsActiveTrue(Integer restaurantId);
     @Query("select r from Review r where r.deliveryDriver.isActive=true and r.deliveryDriver.driverCode=:driverId")
     List<Review> findByDeliveryDriverIdAndIsActiveTrue(Integer driverId);
+    @Query(" select avg(r.rating) from Review r where r.restaurant.id =:restaurantId and r.isActive=true")
+    Double getRestaurantAverage(Integer restaurantId);
 }

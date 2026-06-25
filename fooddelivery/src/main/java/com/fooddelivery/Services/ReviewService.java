@@ -106,4 +106,10 @@ public class ReviewService {
         review.setUpdatedDate(new Date());
         reviewRepository.save(review);
     }
+    public Double getRestaurantAverageRating(Integer restaurantId) {
+        restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+        Double avg = reviewRepository.getRestaurantAverage(restaurantId);
+        return avg != null ? avg : 0.0;
+    }
 }
