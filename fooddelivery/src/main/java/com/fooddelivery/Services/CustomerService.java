@@ -149,4 +149,7 @@ public class CustomerService {
         }
         return orderResponseList;
     }
+    public CustomerResponseDTO getTopLoyalCustomers( ) {
+      return (CustomerResponseDTO) customerRepository.getTopLoyalCustomers();
+    }
 }
