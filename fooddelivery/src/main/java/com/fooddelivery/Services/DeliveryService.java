@@ -152,4 +152,14 @@ public class DeliveryService {
         }
         return result;
     }
+    public List<DeliveryDriverResponseDTO> getDriverLeaderboard() {
+        List<DeliveryDriver> drivers = deliveryDriverRepository.getDriverLeaderboard();
+        List<DeliveryDriverResponseDTO> result = new ArrayList<>();
+        int limit = Math.min(10, drivers.size());
+
+        for (int i = 0; i <= limit; i++) {
+            result.add(DeliveryDriverResponseDTO.fromEntity(drivers.get(i)));
+        }
+        return result;
+    }
 }
