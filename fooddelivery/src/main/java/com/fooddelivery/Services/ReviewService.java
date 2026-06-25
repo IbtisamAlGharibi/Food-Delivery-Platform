@@ -139,4 +139,7 @@ public class ReviewService {
         Double earnings = deliveryRepository.getDriverEarnings(driverId, from, to);
         return earnings != null ? earnings : 0.0;
     }
+    public List<Object[]> getBusiestHours() {
+        return orderRepository.getOrdersByHour();
+    }
 }

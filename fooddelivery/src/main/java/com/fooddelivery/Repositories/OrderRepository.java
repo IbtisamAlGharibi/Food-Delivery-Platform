@@ -30,5 +30,12 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
        and o.isActive=true
        """)
     Double getRestaurantRevenue(Integer restaurantId, Date from, Date to);
-
+    @Query("""
+       select function('hour', o.orderDate), count(o)
+       from Order o
+       where o.isActive =true
+       group by function('hour', o.orderDate)
+       order by count(o) desc
+       """)
+    List<Object[]> getOrdersByHour();
 }
