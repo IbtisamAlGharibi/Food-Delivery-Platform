@@ -112,4 +112,10 @@ public class ReviewService {
         Double avg = reviewRepository.getRestaurantAverage(restaurantId);
         return avg != null ? avg : 0.0;
     }
+    public Double getDriverAverageRating(Integer driverId) {
+        deliveryDriverRepository.findById(driverId)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
+        Double avg = reviewRepository.getDriverAverage(driverId);
+        return avg != null ? avg : 0.0;
+    }
 }
