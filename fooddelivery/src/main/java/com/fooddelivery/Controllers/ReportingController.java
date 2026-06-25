@@ -50,4 +50,8 @@ public class ReportingController {
     public ResponseEntity<Long> getPlatformOrderCount(@RequestParam Date start, @RequestParam Date end) {
         return ResponseEntity.ok(orderService.getPlatformOrderCount(start, end));
     }
+    @GetMapping("/platform/dailySummary/fees")
+    public ResponseEntity<Double> getPlatformFees(@RequestParam Date start, @RequestParam Date end) {
+        return ResponseEntity.ok(orderService.getPlatformDeliveryFees(start,end));
+    }
 }
