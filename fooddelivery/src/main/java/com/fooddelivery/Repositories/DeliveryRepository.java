@@ -4,6 +4,7 @@ import com.fooddelivery.Entities.Delivery;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
 import java.util.List;
 
 public interface DeliveryRepository extends JpaRepository<Delivery,Integer> {
@@ -11,4 +12,13 @@ public interface DeliveryRepository extends JpaRepository<Delivery,Integer> {
     List<Delivery> findByDeliveryDriverIdAndStatus(Integer driverId, String status);
     @Query("select d from Delivery d where d.isActive=true and d.status=:status")
     List<Delivery> findDeliveryByStatus( String status);
+    @Query("""
+       select sum(o.totalAmount)
+       from Delivery d
+       join d.order o
+       where d.deliveryDriver.driverCode =:driverId
+       and d.deliveredAt between :from and :to
+       and d.status = 'DELIVERED'
+       """)
+    Double getDriverEarnings(Integer driverId, Date from, Date to);
 }

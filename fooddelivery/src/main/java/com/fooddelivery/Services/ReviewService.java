@@ -133,4 +133,10 @@ public class ReviewService {
         Double revenue = orderRepository.getRestaurantRevenue(restaurantId, from, to);
         return revenue != null ? revenue : 0.0;
     }
+    public Double getDriverEarnings(Integer driverId, Date from, Date to) {
+        deliveryDriverRepository.findById(driverId)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
+        Double earnings = deliveryRepository.getDriverEarnings(driverId, from, to);
+        return earnings != null ? earnings : 0.0;
+    }
 }
