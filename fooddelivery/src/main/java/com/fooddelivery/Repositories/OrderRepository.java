@@ -16,9 +16,9 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
     @Query("select o from Order o where o.isActive=true and o.orderDate between :start and :end")
     List<Order> findByOrderDateBetween(@Param("start") Date start, @Param("end") Date end);
     @Query("select count(o) from Order o where o.isActive=true and o.restaurant.id=:restaurantId and o.status='COMPLETED'")
-    List<Order> totalCompletedOrdersForRestaurant(Integer restaurantId);
+    Long totalCompletedOrdersForRestaurant(@Param("restaurantId") Integer restaurantId);
     @Query("select sum(o) from Order o where o.isActive=true and o.restaurant.id=:restaurantId and o.delivery.deliveredAt=:date")
-    List<Order> totalDeliveredOrdersInDate(Integer restaurantId, Date date);
+    List<Order> totalDeliveredOrdersInDate(@Param("restaurantId") Integer restaurantId, @Param("date") Date date);
     @Query("select sum(o.deliveryFee) where o.isActive=true and o.orderDate between :start and :end")
     Double totalDeliveryFeesForDate(@Param("start") Date start, @Param("end") Date end);
 
