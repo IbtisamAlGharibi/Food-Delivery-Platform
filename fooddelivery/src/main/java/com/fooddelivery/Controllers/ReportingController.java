@@ -2,10 +2,7 @@ package com.fooddelivery.Controllers;
 
 import com.fooddelivery.DTO.ResponseDTOs.CustomerResponseDTO;
 import com.fooddelivery.DTO.ResponseDTOs.DeliveryDriverResponseDTO;
-import com.fooddelivery.Services.CustomerService;
-import com.fooddelivery.Services.DeliveryService;
-import com.fooddelivery.Services.OrderService;
-import com.fooddelivery.Services.RestaurantService;
+import com.fooddelivery.Services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +18,16 @@ public class ReportingController {
     OrderService orderService;
     CustomerService customerService;
     DeliveryService deliveryService;
+    ReviewService reviewService;
 
     @Autowired
     public ReportingController(RestaurantService restaurantService, OrderService orderService,
-                               CustomerService customerService, DeliveryService deliveryService) {
+                               CustomerService customerService, DeliveryService deliveryService, ReviewService reviewService) {
         this.restaurantService = restaurantService;
         this.orderService = orderService;
         this.customerService = customerService;
         this.deliveryService = deliveryService;
+        this.reviewService=reviewService;
     }
     @GetMapping("/revenue/restaurant/{restaurantId}")
     public ResponseEntity<Double> getRestaurantRevenue(@PathVariable Integer restaurantId,@RequestParam Date date) {
@@ -53,5 +52,10 @@ public class ReportingController {
     @GetMapping("/platform/dailySummary/fees")
     public ResponseEntity<Double> getPlatformFees(@RequestParam Date start, @RequestParam Date end) {
         return ResponseEntity.ok(orderService.getPlatformDeliveryFees(start,end));
+    }
+    @GetMapping("/revenue/restaurant/{restaurantID}")
+    public ResponseEntity<Double> getRestaurantRevenue(@PathVariable Integer restaurantId, @RequestParam Date from,
+            @RequestParam Date to) {
+        return ResponseEntity.ok(reviewService.getRestaurantRevenue(restaurantId, from, to));
     }
 }
