@@ -23,14 +23,16 @@ public class RestaurantService {
     RestaurantOwnerRepository restaurantOwnerRepository;
     ComboMealRepository comboMealRepository;
     OrderRepository orderRepository;
+    OrderItemRepository orderItemRepository;
     @Autowired
     public RestaurantService(RestaurantRepository restaurantRepository,MenuItemRepository menuItemRepository,RestaurantOwnerRepository restaurantOwnerRepository,ComboMealRepository  comboMealRepository,
-                             OrderRepository orderRepository) {
+                             OrderRepository orderRepository,OrderItemRepository orderItemRepository) {
         this.restaurantRepository = restaurantRepository;
         this.menuItemRepository = menuItemRepository;
         this.restaurantOwnerRepository= restaurantOwnerRepository;
         this.comboMealRepository = comboMealRepository;
         this.orderRepository= orderRepository;
+        this.orderItemRepository=orderItemRepository;
     }
 
     public RestaurantResponseDTO createRestaurant(RestaurantRequestDTO dto, Integer ownerId){
@@ -179,5 +181,18 @@ public class RestaurantService {
         restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
         return orderRepository.totalCompletedOrdersForRestaurant(restaurantId);
+    }
+    public List<MenuItemResponseDTO> getTopSellingItems(Integer restaurantId) {
+        restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+        List<OrderItem> orderItems = orderItemRepository.getTopSellingItems(restaurantId);
+
+        List<MenuItemResponseDTO> result = new ArrayList<>();
+        for (OrderItem orderItem : orderItems) {
+            if (orderItem.getMenuItem() != null) {
+                result.add(MenuItemResponseDTO.fromEntity(orderItem.getMenuItem()));
+            }
+        }
+        return result;
     }
 }
