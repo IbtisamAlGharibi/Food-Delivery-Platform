@@ -1,5 +1,6 @@
 package com.fooddelivery.Controllers;
 
+import com.fooddelivery.DTO.ResponseDTOs.CustomerResponseDTO;
 import com.fooddelivery.Services.CustomerService;
 import com.fooddelivery.Services.DeliveryService;
 import com.fooddelivery.Services.OrderService;
@@ -8,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/reports")
@@ -33,5 +36,9 @@ public class ReportingController {
     @GetMapping("/orders/count/restaurant/{restaurantId}")
     public ResponseEntity<Long> getRestaurantOrderCount(@PathVariable Integer restaurantId) {
         return ResponseEntity.ok(restaurantService.getRestaurantOrderCount(restaurantId));
+    }
+    @GetMapping("/customers/topLoyalty")
+    public ResponseEntity<List<CustomerResponseDTO>> getTopLoyalCustomers() {
+        return ResponseEntity.ok(Collections.singletonList(customerService.getTopLoyalCustomers()));
     }
 }
