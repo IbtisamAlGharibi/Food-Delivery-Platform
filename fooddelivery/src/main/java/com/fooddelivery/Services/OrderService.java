@@ -179,4 +179,7 @@ public class OrderService {
     public Double getPlatformDeliveryFees(Date start, Date end) {
       return orderRepository.totalDeliveryFeesForDate(start,end);
     }
+    public Long getPlatformOrderCount(Date start, Date end) {
+        return (long) orderRepository.findByOrderDateBetween(start, end).size();
+    }
 }
