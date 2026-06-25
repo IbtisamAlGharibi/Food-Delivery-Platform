@@ -195,4 +195,13 @@ public class RestaurantService {
         }
         return result;
     }
+    public List<MenuItemResponseDTO> searchMenuItems(String keyword, double minCalories, double maxCalories) {
+        List<MenuItem> items = menuItemRepository.searchMenuItems(keyword, minCalories, maxCalories);
+        List<MenuItemResponseDTO> result = new ArrayList<>();
+
+        for(MenuItem item : items){
+            result.add(MenuItemResponseDTO.fromEntity(item));
+        }
+        return result;
+    }
 }

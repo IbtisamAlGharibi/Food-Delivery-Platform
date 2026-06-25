@@ -16,4 +16,15 @@ public interface MenuItemRepository extends JpaRepository<MenuItem,Integer> {
     List<MenuItem> findByIsVegetarianTrue();
     @Query("SELECT mi FROM MenuItem mi WHERE mi.isActive=true AND mi.price BETWEEN :min AND :max")
     List<MenuItem> findByPriceBetween(double min, double max);
+    @Query("""
+       select mi
+       from MenuItem mi
+       where mi.isActive=true
+       and lower(mi.name)
+       like lower(concat('%',:keyword,'%'))
+       and mi.calories
+       between :minCalories
+       and :maxCalories
+       """)
+    List<MenuItem> searchMenuItems(String keyword, double minCalories, double maxCalories);
 }
