@@ -68,4 +68,8 @@ public class OrderController {
         CorporateOrderResponseDTO corporateOrder = orderService.placeCorporateOrder(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(corporateOrder);
     }
+    @PostMapping("/{id}/reorder")
+    public ResponseEntity<OrderResponseDTO> reorder(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.reorder(id));
+    }
 }
