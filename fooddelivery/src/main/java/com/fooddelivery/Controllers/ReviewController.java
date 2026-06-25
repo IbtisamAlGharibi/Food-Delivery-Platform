@@ -31,7 +31,7 @@ public class ReviewController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-    @GetMapping("/restaurant/{restaurantId}")
+    @GetMapping("/restaurant/{restaurantID}")
     public ResponseEntity<List<ReviewResponseDTO>> getRestaurantReviews(@PathVariable Integer restaurantId) {
         return ResponseEntity.ok(reviewService.getRestaurantReviews(restaurantId));
     }
@@ -46,8 +46,8 @@ public class ReviewController {
     }
     @GetMapping("/restaurant/{restaurantId}/average")
     public ResponseEntity<Double> getRestaurantAverage(@PathVariable Integer restaurantId) {
-        return ResponseEntity.ok(reviewService.getRestaurantAverageRating(restaurantId));
-    }
+       return ResponseEntity.ok(reviewService.getRestaurantAverageRating(restaurantId));
+   }
     @GetMapping("/driver/{driverId}/average")
     public ResponseEntity<Double> getDriverAverage(@PathVariable Integer driverId) {
         return ResponseEntity.ok(reviewService.getDriverAverageRating(driverId));

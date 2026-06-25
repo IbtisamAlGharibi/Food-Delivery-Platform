@@ -127,4 +127,10 @@ public class ReviewService {
 
         return reviews.map(ReviewResponseDTO::fromEntity);
     }
+    public Double getRestaurantRevenue(Integer restaurantId, Date from, Date to) {
+        restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+        Double revenue = orderRepository.getRestaurantRevenue(restaurantId, from, to);
+        return revenue != null ? revenue : 0.0;
+    }
 }
