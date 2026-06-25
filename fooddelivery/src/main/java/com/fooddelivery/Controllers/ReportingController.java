@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reports")
@@ -57,5 +58,13 @@ public class ReportingController {
     public ResponseEntity<Double> getRestaurantRevenue(@PathVariable Integer restaurantId, @RequestParam Date from,
             @RequestParam Date to) {
         return ResponseEntity.ok(reviewService.getRestaurantRevenue(restaurantId, from, to));
+    }
+    @GetMapping("/drivers/{driverId}/earnings")
+    public ResponseEntity<Double> getDriverEarnings(@PathVariable Integer driverId, @RequestParam Date from, @RequestParam Date to) {
+        return ResponseEntity.ok(reviewService.getDriverEarnings(driverId, from, to));
+    }
+    @GetMapping("/platform/busiest-hours")
+    public ResponseEntity<List<Object[]>> getBusiestHours() {
+        return ResponseEntity.ok(reviewService.getBusiestHours());
     }
 }
