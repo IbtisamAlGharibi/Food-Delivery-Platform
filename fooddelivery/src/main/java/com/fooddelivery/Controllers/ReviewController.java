@@ -48,4 +48,8 @@ public class ReviewController {
     public ResponseEntity<Double> getRestaurantAverage(@PathVariable Integer restaurantId) {
         return ResponseEntity.ok(reviewService.getRestaurantAverageRating(restaurantId));
     }
+    @GetMapping("/driver/{driverId}/average")
+    public ResponseEntity<Double> getDriverAverage(@PathVariable Integer driverId) {
+        return ResponseEntity.ok(reviewService.getDriverAverageRating(driverId));
+    }
 }
