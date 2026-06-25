@@ -7,9 +7,13 @@ import com.fooddelivery.Exceptions.ResourceNotFoundException;
 import com.fooddelivery.Repositories.OrderRepository;
 import com.fooddelivery.Repositories.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Service
 public class PaymentService {
@@ -54,5 +58,10 @@ public class PaymentService {
     public PaymentResponseDTO getPaymentByOrder(Integer orderId) {
         Payment payment = paymentRepository.findByOrderId(orderId);
         return PaymentResponseDTO.fromEntity(payment);
+    }
+    public Page<PaymentResponseDTO> searchPayments(String method, String status, Date from, Date to, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Payment> payments = paymentRepository.searchPayments(method, status, from, to, pageable);
+        return payments.map(PaymentResponseDTO::fromEntity);
     }
 }
