@@ -10,6 +10,7 @@ import com.fooddelivery.Exceptions.ResourceNotFoundException;
 import com.fooddelivery.Repositories.DeliveryDriverRepository;
 import com.fooddelivery.Repositories.DeliveryRepository;
 import com.fooddelivery.Repositories.OrderRepository;
+import com.fooddelivery.Utils.HelperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -159,6 +160,20 @@ public class DeliveryService {
 
         for (int i = 0; i <= limit; i++) {
             result.add(DeliveryDriverResponseDTO.fromEntity(drivers.get(i)));
+        }
+        return result;
+    }
+    public List<DeliveryDriverResponseDTO> getNearbyDrivers(double lat, double lng, double radiusKm) {
+        List<DeliveryDriver> drivers = deliveryDriverRepository.getOnlineDrivers();
+        List<DeliveryDriverResponseDTO> result = new ArrayList<>();
+
+        for(DeliveryDriver driver : drivers){
+            double driverLat = Double.parseDouble(driver.getCurrentLat());
+            double driverLng = Double.parseDouble(driver.getCurrentLng());
+            double distance = HelperUtils.calculateDistance(lat, lng, driverLat, driverLng);
+            if(distance <= radiusKm){
+                result.add(DeliveryDriverResponseDTO.fromEntity(driver));
+            }
         }
         return result;
     }
