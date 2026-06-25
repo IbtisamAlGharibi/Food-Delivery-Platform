@@ -30,4 +30,8 @@ public class ReportingController {
     public ResponseEntity<Double> getRestaurantRevenue(@PathVariable Integer restaurantId,@RequestParam Date date) {
         return ResponseEntity.ok(restaurantService.getRestaurantRevenue(restaurantId,date));
     }
+    @GetMapping("/orders/count/restaurant/{restaurantId}")
+    public ResponseEntity<Long> getRestaurantOrderCount(@PathVariable Integer restaurantId) {
+        return ResponseEntity.ok(restaurantService.getRestaurantOrderCount(restaurantId));
+    }
 }
