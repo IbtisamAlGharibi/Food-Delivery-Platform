@@ -8,6 +8,7 @@ import com.fooddelivery.DTO.ResponseDTOs.OrderResponseDTO;
 import com.fooddelivery.Services.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -73,5 +74,9 @@ public class CustomerController {
     @GetMapping("/{id}/orders")
     public ResponseEntity<List<OrderResponseDTO>> getCustomerOrders(@PathVariable Integer id) {
         return ResponseEntity.ok(customerService.getCustomerOrders(id));
+    }
+    @GetMapping("/search")
+    public ResponseEntity<Page<CustomerResponseDTO>> searchCustomers(@RequestParam String name, @RequestParam int page, @RequestParam int size) {
+        return ResponseEntity.ok(customerService.searchCustomers(name, page, size));
     }
 }
