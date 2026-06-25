@@ -1,6 +1,7 @@
 package com.fooddelivery.Controllers;
 
 import com.fooddelivery.DTO.ResponseDTOs.CustomerResponseDTO;
+import com.fooddelivery.DTO.ResponseDTOs.DeliveryDriverResponseDTO;
 import com.fooddelivery.Services.CustomerService;
 import com.fooddelivery.Services.DeliveryService;
 import com.fooddelivery.Services.OrderService;
@@ -40,5 +41,9 @@ public class ReportingController {
     @GetMapping("/customers/topLoyalty")
     public ResponseEntity<List<CustomerResponseDTO>> getTopLoyalCustomers() {
         return ResponseEntity.ok(Collections.singletonList(customerService.getTopLoyalCustomers()));
+    }
+    @GetMapping("/drivers/leaderboard")
+    public ResponseEntity<List<DeliveryDriverResponseDTO>> getDriverLeaderboard() {
+        return ResponseEntity.ok(deliveryService.getDriverLeaderboard());
     }
 }
