@@ -46,4 +46,8 @@ public class ReportingController {
     public ResponseEntity<List<DeliveryDriverResponseDTO>> getDriverLeaderboard() {
         return ResponseEntity.ok(deliveryService.getDriverLeaderboard());
     }
+    @GetMapping("/platform/dailySummary/orders")
+    public ResponseEntity<Long> getPlatformOrderCount(@RequestParam Date start, @RequestParam Date end) {
+        return ResponseEntity.ok(orderService.getPlatformOrderCount(start, end));
+    }
 }
