@@ -1,80 +1,93 @@
+/* ==========================
+   GENERAL
+========================== */
+
 *{
+    margin:0;
+    padding:0;
     box-sizing:border-box;
 }
 
-
 body{
-
-    margin:0;
-    font-family:Arial;
+    font-family:Arial, Helvetica, sans-serif;
     background:#f5f5f5;
-
+    color:#333;
+    min-height:100vh;
 }
 
-
+/* ==========================
+   HEADER
+========================== */
 
 header{
-
     background:#ff5722;
     color:white;
     padding:20px;
-
+    text-align:center;
+    box-shadow:0 3px 8px rgba(0,0,0,.2);
 }
 
+header h1{
+    margin-bottom:15px;
+}
 
+/* ==========================
+   NAVIGATION
+========================== */
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
 
 nav button{
 
-    padding:10px;
-    margin:5px;
+    padding:10px 18px;
+
+    border:none;
+
+    border-radius:6px;
+
     cursor:pointer;
+
+    background:white;
+
+    color:#ff5722;
+
+    font-weight:bold;
+
+    transition:.3s;
+}
+
+nav button:hover{
+
+    background:#ffe2d6;
+
+    transform:translateY(-2px);
 
 }
 
-
+/* ==========================
+   MAIN
+========================== */
 
 main{
 
-    padding:20px;
+    padding:30px;
 
 }
 
+section{
 
-
-.grid{
-
-    display:grid;
-    grid-template-columns:
-    repeat(auto-fit,minmax(250px,1fr));
-
-    gap:20px;
+    margin-bottom:40px;
 
 }
 
-
-
-.card{
-
-    background:white;
-    padding:20px;
-    border-radius:10px;
-    box-shadow:0 3px 8px #aaa;
-
-}
-
-
-
-button{
-
-    background:#ff5722;
-    color:white;
-    border:0;
-    padding:10px;
-    border-radius:5px;
-
-}
-
-
+/* ==========================
+   UTILITIES
+========================== */
 
 .hidden{
 
@@ -82,66 +95,390 @@ button{
 
 }
 
-
-
 .loading{
 
     display:none;
-    color:blue;
+
+    background:#1976d2;
+
+    color:white;
+
+    text-align:center;
+
+    padding:12px;
+
+    font-weight:bold;
 
 }
-
-
 
 .error{
 
-    color:red;
+    background:#ffebee;
+
+    color:#c62828;
+
+    padding:10px;
+
+    text-align:center;
+
+    min-height:24px;
 
 }
 
+/* ==========================
+   FILTERS
+========================== */
 
-
-#progress{
+.filters{
 
     display:flex;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+
+    margin:20px 0;
+
+}
+
+.filters input,
+
+.filters select{
+
+    padding:10px;
+
+    border:1px solid #ccc;
+
+    border-radius:5px;
+
+    font-size:15px;
+
+}
+
+/* ==========================
+   GRID
+========================== */
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
     gap:20px;
 
 }
 
+/* ==========================
+   CARDS
+========================== */
 
+.card{
 
-#progress div{
+    background:white;
 
-    background:#ddd;
-    padding:15px;
-    border-radius:20px;
+    border-radius:10px;
+
+    padding:20px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+
+    transition:.3s;
 
 }
 
+.card:hover{
 
+    transform:translateY(-4px);
 
-.active{
+}
 
-    background:#4caf50!important;
+.card h3{
+
+    margin-bottom:12px;
+
+    color:#ff5722;
+
+}
+
+.card p{
+
+    margin:8px 0;
+
+    line-height:1.5;
+
+}
+
+.card button{
+
+    margin-top:12px;
+
+    margin-right:10px;
+
+}
+
+/* ==========================
+   BUTTONS
+========================== */
+
+button{
+
+    background:#ff5722;
+
     color:white;
 
+    border:none;
+
+    padding:10px 18px;
+
+    border-radius:5px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
 }
 
+button:hover{
 
+    background:#e64a19;
+
+}
+
+/* ==========================
+   TABLES
+========================== */
 
 table{
 
     width:100%;
-    background:white;
+
     border-collapse:collapse;
+
+    background:white;
+
+    margin-top:15px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
 
 }
 
+table th{
 
+    background:#ff5722;
 
-td,th{
+    color:white;
+
+    padding:12px;
+
+}
+
+table td{
 
     border:1px solid #ddd;
+
     padding:10px;
+
+    text-align:center;
+
+}
+
+table tr:nth-child(even){
+
+    background:#fafafa;
+
+}
+
+/* ==========================
+   INPUTS
+========================== */
+
+input,
+
+select{
+
+    padding:10px;
+
+    border:1px solid #bbb;
+
+    border-radius:5px;
+
+    margin:6px 0;
+
+    font-size:15px;
+
+}
+
+/* ==========================
+   PROGRESS
+========================== */
+
+#progress{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    margin-top:25px;
+
+    flex-wrap:wrap;
+
+}
+
+#progress div{
+
+    flex:1;
+
+    text-align:center;
+
+    background:#d6d6d6;
+
+    padding:18px;
+
+    border-radius:20px;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+.active{
+
+    background:#4caf50 !important;
+
+    color:white;
+
+}
+
+/* ==========================
+   REPORTS
+========================== */
+
+.reportCard{
+
+    background:white;
+
+    padding:20px;
+
+    margin-top:20px;
+
+    border-radius:10px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+
+}
+
+.reportCard h3{
+
+    margin-bottom:15px;
+
+    color:#ff5722;
+
+}
+
+/* ==========================
+   FORM GROUPS
+========================== */
+
+label{
+
+    display:block;
+
+    margin-top:10px;
+
+    font-weight:bold;
+
+}
+
+/* ==========================
+   CART
+========================== */
+
+#subtotal{
+
+    color:#2e7d32;
+
+    font-size:24px;
+
+    font-weight:bold;
+
+}
+
+/* ==========================
+   PAYMENT
+========================== */
+
+#paymentResult{
+
+    margin-top:20px;
+
+    padding:15px;
+
+    background:#fff3e0;
+
+    border-radius:8px;
+
+    min-height:40px;
+
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:900px){
+
+    nav{
+
+        flex-direction:column;
+
+        align-items:center;
+
+    }
+
+    .filters{
+
+        flex-direction:column;
+
+    }
+
+    #progress{
+
+        flex-direction:column;
+
+    }
+
+}
+
+@media(max-width:600px){
+
+    header h1{
+
+        font-size:24px;
+
+    }
+
+    button{
+
+        width:100%;
+
+    }
+
+    .grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    table{
+
+        display:block;
+
+        overflow-x:auto;
+
+    }
 
 }

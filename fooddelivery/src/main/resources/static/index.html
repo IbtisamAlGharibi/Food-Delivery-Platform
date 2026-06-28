@@ -1,143 +1,477 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Food Delivery Client</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery System</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
+
     <h1>Food Delivery System</h1>
 
     <nav>
-        <button onclick="showRestaurants()">Restaurants</button>
-        <button onclick="showCart()">Cart</button>
-        <button onclick="showTracking()">Tracking</button>
-        <button onclick="showDashboard()">Admin Dashboard</button>
-    </nav>
-</header>
 
+        <button onclick="showSection('restaurantsSection');loadRestaurants();">
+            Restaurants
+        </button>
+
+        <button onclick="showSection('cartSection');">
+            Cart
+        </button>
+
+        <button onclick="showSection('trackingSection');">
+            Order Tracking
+        </button>
+
+        <button onclick="showSection('reviewsSection');">
+            Reviews
+        </button>
+
+        <button onclick="showSection('paymentSection');">
+            Payments
+        </button>
+
+        <button onclick="showSection('driversSection');">
+            Drivers
+        </button>
+
+        <button onclick="showSection('reportsSection');loadReports();">
+            Reports
+        </button>
+
+    </nav>
+
+</header>
 
 <div id="loading" class="loading">
     Loading...
 </div>
 
-
 <div id="error" class="error"></div>
-
-
 
 <main>
 
+    <!-- ===================== RESTAURANTS ====================== -->
 
-    <section id="restaurants">
+    <section id="restaurantsSection">
 
-        <h2>Restaurant Browse</h2>
+        <h2>Restaurants</h2>
 
+        <div class="filters">
 
-        <input
-                id="search"
-                placeholder="Search restaurant..."
-                onkeyup="loadRestaurants()">
+            <input
+                    type="text"
+                    id="search"
+                    placeholder="Search restaurant..."
+                    onkeyup="loadRestaurants()">
 
+            <select id="cuisine" onchange="loadRestaurants()">
 
-        <select id="cuisine" onchange="loadRestaurants()">
-            <option value="">All Cuisine</option>
-            <option>Italian</option>
-            <option>Indian</option>
-            <option>Fast Food</option>
-        </select>
+                <option value="">All Cuisine</option>
 
+                <option>Italian</option>
+                <option>Indian</option>
+                <option>Fast Food</option>
+                <option>Chinese</option>
+                <option>Arabic</option>
 
-        <div id="restaurantList" class="grid"></div>
-
-
-    </section>
-
-
-
-    <section id="menu" class="hidden">
-
-        <h2>Menu</h2>
-
-        <div id="menuItems" class="grid"></div>
-
-
-        <h3>
-            Subtotal:
-            <span id="subtotal">0</span>
-        </h3>
-
-
-        <button onclick="placeOrder()">
-            Place Order
-        </button>
-
-
-    </section>
-
-
-
-
-    <section id="tracking" class="hidden">
-
-        <h2>Order Tracking</h2>
-
-
-        <div id="progress">
-
-            <div>PENDING</div>
-            <div>PREPARING</div>
-            <div>READY</div>
-            <div>DELIVERED</div>
+            </select>
 
         </div>
 
+        <div id="restaurantList" class="grid">
+
+        </div>
+
+    </section>
+
+    <!-- ===================== MENU ====================== -->
+
+    <section id="menuSection" class="hidden">
+
+        <h2>Restaurant Menu</h2>
+
+        <button onclick="showSection('restaurantsSection')">
+            ← Back
+        </button>
+
+        <h3>Menu Items</h3>
+
+        <div id="menuItems" class="grid"></div>
+
+        <h3>Combo Meals</h3>
+
+        <div id="comboMeals" class="grid"></div>
+
+    </section>
+
+    <!-- ===================== CART ====================== -->
+
+    <section id="cartSection" class="hidden">
+
+        <h2>Shopping Cart</h2>
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody id="cartTable">
+
+            </tbody>
+
+        </table>
 
         <h3>
-            ETA:
-            <span id="eta">
--
-</span>
+
+            Subtotal :
+            <span id="subtotal">0</span>
+
         </h3>
 
+        <button onclick="placeOrder()">
+
+            Place Order
+
+        </button>
 
     </section>
 
+    <!-- ===================== ORDER TRACKING ====================== -->
 
+    <section id="trackingSection" class="hidden">
 
+        <h2>Order Tracking</h2>
 
-    <section id="dashboard" class="hidden">
+        <p>
 
+            Current Order ID :
+            <span id="currentOrder">-</span>
 
-        <h2>Admin Reporting</h2>
+        </p>
 
+        <h3>
 
-        <h3>Daily Summary</h3>
+            Status :
+            <span id="orderStatus">-</span>
 
-        <table id="summary"></table>
+        </h3>
 
+        <div id="progress">
 
+            <div id="pPending">PENDING</div>
+            <div id="pPreparing">PREPARING</div>
+            <div id="pReady">READY</div>
+            <div id="pDelivered">DELIVERED</div>
 
-        <h3>Top Loyalty Customers</h3>
+        </div>
 
-        <table id="customers"></table>
+        <button onclick="trackOrder()">
 
+            Refresh Status
 
-
-        <h3>Driver Leaderboard</h3>
-
-        <table id="drivers"></table>
-
+        </button>
 
     </section>
 
+    <!-- ===================== REVIEWS ====================== -->
 
+    <section id="reviewsSection" class="hidden">
+
+        <h2>Restaurant Reviews</h2>
+
+        <label>
+
+            Restaurant ID
+
+            <input type="number" id="reviewRestaurantId">
+
+        </label>
+
+        <button onclick="loadReviews()">
+
+            Load Reviews
+
+        </button>
+
+        <button onclick="leaveRestaurantReview()">
+
+            Leave Review
+
+        </button>
+
+        <h3>
+
+            Average Rating :
+            <span id="averageRating">-</span>
+
+        </h3>
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>Customer</th>
+                <th>Rating</th>
+                <th>Comment</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody id="reviewsTable">
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <!-- ===================== PAYMENTS ====================== -->
+
+    <section id="paymentSection" class="hidden">
+
+        <h2>Payments</h2>
+
+        <label>
+
+            Order ID
+
+            <input type="number" id="paymentOrderId">
+
+        </label>
+
+        <br><br>
+
+        <label>
+
+            Payment Method
+
+            <select id="paymentMethod">
+
+                <option>CASH</option>
+                <option>CARD</option>
+
+            </select>
+
+        </label>
+
+        <br><br>
+
+        <button onclick="createPayment()">
+
+            Process Payment
+
+        </button>
+
+        <br><br>
+
+        <label>
+
+            Payment ID
+
+            <input type="number" id="completePaymentId">
+
+        </label>
+
+        <button onclick="completePayment()">
+
+            Complete Payment
+
+        </button>
+
+        <div id="paymentResult">
+
+        </div>
+
+    </section>
+
+    <!-- ===================== DRIVERS ====================== -->
+
+    <section id="driversSection" class="hidden">
+
+        <h2>Driver Tools</h2>
+
+        <h3>Update Driver Status</h3>
+
+        <input type="number" id="driverId" placeholder="Driver ID">
+
+        <select id="driverStatus">
+
+            <option value="true">Online</option>
+
+            <option value="false">Offline</option>
+
+        </select>
+
+        <button onclick="updateDriverStatus()">
+
+            Update
+
+        </button>
+
+        <hr>
+
+        <h3>Update Driver Location</h3>
+
+        <input type="number" id="driverLocationId" placeholder="Driver ID">
+
+        <input type="number" id="lat" placeholder="Latitude">
+
+        <input type="number" id="lng" placeholder="Longitude">
+
+        <button onclick="updateLocation()">
+
+            Update Location
+
+        </button>
+
+        <hr>
+
+        <h3>Nearby Drivers</h3>
+
+        <input type="number" id="searchLat" placeholder="Latitude">
+
+        <input type="number" id="searchLng" placeholder="Longitude">
+
+        <input type="number" id="radius" placeholder="Radius (km)">
+
+        <button onclick="findNearbyDrivers()">
+
+            Search
+
+        </button>
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>Name</th>
+
+                <th>Phone</th>
+
+                <th>Status</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody id="driversTable">
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <!-- ===================== REPORTS ====================== -->
+
+    <section id="reportsSection" class="hidden">
+
+        <h2>Reports Dashboard</h2>
+
+        <div class="reportCard">
+
+            <h3>Top Loyalty Customer</h3>
+
+            <div id="topCustomer"></div>
+
+        </div>
+
+        <div class="reportCard">
+
+            <h3>Driver Leaderboard</h3>
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>Name</th>
+
+                    <th>Phone</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody id="leaderboard">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="reportCard">
+
+            <h3>Platform Orders</h3>
+
+            <input type="date" id="ordersStart">
+
+            <input type="date" id="ordersEnd">
+
+            <button onclick="loadPlatformOrders()">
+
+                Get Count
+
+            </button>
+
+            <p>
+
+                Total Orders :
+                <span id="platformOrders">-</span>
+
+            </p>
+
+        </div>
+
+        <div class="reportCard">
+
+            <h3>Platform Delivery Fees</h3>
+
+            <input type="date" id="feesStart">
+
+            <input type="date" id="feesEnd">
+
+            <button onclick="loadPlatformFees()">
+
+                Get Fees
+
+            </button>
+
+            <p>
+
+                Total Fees :
+                <span id="platformFees">-</span>
+
+            </p>
+
+        </div>
+
+    </section>
 
 </main>
-
-
 
 <script src="app.js"></script>
 

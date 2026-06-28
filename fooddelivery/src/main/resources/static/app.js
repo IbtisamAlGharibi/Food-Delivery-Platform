@@ -1,165 +1,149 @@
-const API_BASE="http://localhost:8080/api";
+// =====================================================
+// CONFIGURATION
+// =====================================================
 
+const API_BASE = "http://localhost:8080/api";
 
-let selectedRestaurant=null;
-let cart=[];
-let currentOrder=null;
+let selectedRestaurant = null;
+let currentOrder = null;
+let cart = [];
 
+// =====================================================
+// COMMON FUNCTIONS
+// =====================================================
 
+function showSection(id) {
 
-function show(id){
-
-    document.querySelectorAll("section")
-        .forEach(s=>s.classList.add("hidden"));
+    document.querySelectorAll("main section")
+        .forEach(s => s.classList.add("hidden"));
 
     document.getElementById(id)
         .classList.remove("hidden");
 
 }
 
+function showLoading(show) {
 
-
-function loading(v){
-
-    document.getElementById("loading")
-        .style.display=v?"block":"none";
+    document.getElementById("loading").style.display =
+        show ? "block" : "none";
 
 }
 
+function showError(message) {
 
-
-function error(msg){
-
-    document.getElementById("error")
-        .innerHTML=msg;
+    document.getElementById("error").innerHTML =
+        message;
 
 }
 
+async function api(url, options = {}) {
 
+    try {
 
-async function api(url,opt={}){
+        showLoading(true);
 
+        showError("");
 
-    try{
+        const response =
+            await fetch(API_BASE + url, options);
 
-        loading(true);
+        if (!response.ok) {
 
+            throw new Error(await response.text());
 
-        let res =
-            await fetch(API_BASE+url,opt);
+        }
 
+        if (response.status === 204)
+            return null;
 
-        if(!res.ok)
-            throw Error(await res.text());
+        return await response.json();
 
+    } catch (e) {
 
-        return await res.json();
+        showError(e.message);
 
+        console.error(e);
 
-    }
+        return null;
 
-    catch(e){
+    } finally {
 
-        error(e.message);
-
-    }
-
-    finally{
-
-        loading(false);
+        showLoading(false);
 
     }
 
 }
 
+// =====================================================
+// RESTAURANTS
+// =====================================================
 
+async function loadRestaurants() {
 
-
-
-/*
-=========================
- RESTAURANTS
-=========================
-*/
-
-
-
-async function loadRestaurants(){
-
-
-
-    let restaurants =
+    const restaurants =
         await api("/restaurants");
 
+    if (!restaurants)
+        return;
 
+    const keyword =
+        document.getElementById("search").value.toLowerCase();
 
-    let search =
-        document.getElementById("search").value;
-
-
-    let cuisine =
+    const cuisine =
         document.getElementById("cuisine").value;
 
-
-
-    let box =
+    const container =
         document.getElementById("restaurantList");
 
-
-    box.innerHTML="";
-
-
+    container.innerHTML = "";
 
     restaurants
 
-        .filter(r=>
-            r.name
-                .toLowerCase()
-                .includes(search.toLowerCase())
+        .filter(r =>
+            r.name.toLowerCase().includes(keyword)
         )
 
-        .filter(r=>
-            !cuisine ||
-            r.cuisineType==cuisine
+        .filter(r =>
+            cuisine === "" ||
+            r.cuisineType === cuisine
         )
 
+        .forEach(async restaurant => {
 
-        .forEach(r=>{
+            let rating = "-";
 
+            try {
 
-            box.innerHTML+=
+                rating = await api(
+                    `/reviews/restaurant/${restaurant.restaurantId}/average`
+                );
 
-                `
+            } catch (e) {
+            }
+
+            container.innerHTML += `
 
 <div class="card">
 
+<h3>${restaurant.name}</h3>
 
-<h3>${r.name}</h3>
+<p><strong>Cuisine:</strong> ${restaurant.cuisineType}</p>
 
-<p>
-${r.cuisineType}
-</p>
+<p><strong>Delivery Fee:</strong> ${restaurant.deliveryFee}</p>
 
+<p><strong>Rating:</strong> ⭐ ${rating}</p>
 
-<p>
-Delivery:
-${r.deliveryFee}
-</p>
-
-
-<button onclick="openRestaurant(${r.restaurantId})">
+<button onclick="openRestaurant(${restaurant.restaurantId})">
 
 View Menu
 
 </button>
 
-
-<button onclick="reviews(${r.restaurantId})">
+<button onclick="viewReviews(${restaurant.restaurantId})">
 
 Reviews
 
 </button>
-
 
 </div>
 
@@ -167,64 +151,59 @@ Reviews
 
         });
 
-
 }
 
+// =====================================================
+// MENU
+// =====================================================
 
+async function openRestaurant(id) {
 
+    selectedRestaurant = id;
 
-async function openRestaurant(id){
+    showSection("menuSection");
 
+    const menu =
+        await api(`/restaurants/${id}/menu`);
 
-    selectedRestaurant=id;
+    const combos =
+        await api(`/restaurants/${id}/combos`);
 
-
-    show("menu");
-
-
-
-    let menu =
-        await api(
-            `/restaurants/${id}/menu`
-        );
-
-
-
-    let combos =
-        await api(
-            `/restaurants/${id}/combos`
-        );
-
-
-
-    let box =
+    const menuContainer =
         document.getElementById("menuItems");
 
-    box.innerHTML="";
+    const comboContainer =
+        document.getElementById("comboMeals");
 
+    menuContainer.innerHTML = "";
 
+    comboContainer.innerHTML = "";
 
-    menu.forEach(m=>{
+    if (menu) {
 
+        menu.forEach(item => {
 
-        box.innerHTML+=`
+            menuContainer.innerHTML += `
 
 <div class="card">
 
-<h3>${m.name}</h3>
+<h3>${item.name}</h3>
 
-<p>
-${m.price}
-</p>
+<p>Price : ${item.price}</p>
 
+<p>Calories : ${item.calories}</p>
 
-<button onclick="addCart(
-${m.itemCode},
-'${m.name}',
-${m.price}
+<button onclick="addToCart(
+
+${item.itemCode},
+
+'${item.name}',
+
+${item.price}
+
 )">
 
-Add
+Add To Cart
 
 </button>
 
@@ -232,582 +211,656 @@ Add
 
 `;
 
-    });
+        });
 
+    }
 
+    if (combos) {
 
+        combos.forEach(combo => {
 
-    combos.forEach(c=>{
-
-
-        box.innerHTML+=`
+            comboContainer.innerHTML += `
 
 <div class="card">
 
+<h3>${combo.comboName}</h3>
 
-<h3>
-Combo:
-${c.comboName}
-</h3>
-
-
-<p>
-${c.totalPrice}
-</p>
-
-
+<p>Total Price : ${combo.totalPrice}</p>
 
 </div>
 
 `;
 
-    });
+        });
 
-
-}
-
-
-
-
-
-
-
-/*
-=========================
- CART / ORDER
-=========================
-*/
-
-
-function addCart(id,name,price){
-
-
-    cart.push({
-
-        id,
-        name,
-        price,
-        quantity:1
-
-    });
-
-
-    calculateTotal();
+    }
 
 }
 
+// =====================================================
+// CART
+// =====================================================
 
+function addToCart(id, name, price) {
 
-function calculateTotal(){
+    const existing =
+        cart.find(i => i.id === id);
 
+    if (existing) {
 
-    let total=0;
+        existing.quantity++;
 
+    } else {
 
-    cart.forEach(i=>{
+        cart.push({
 
-        total+=i.price*i.quantity;
+            id: id,
+
+            name: name,
+
+            price: price,
+
+            quantity: 1
+
+        });
+
+    }
+
+    renderCart();
+
+}
+
+function renderCart() {
+
+    const body =
+        document.getElementById("cartTable");
+
+    body.innerHTML = "";
+
+    let subtotal = 0;
+
+    cart.forEach(item => {
+
+        subtotal +=
+            item.price * item.quantity;
+
+        body.innerHTML += `
+
+<tr>
+
+<td>${item.name}</td>
+
+<td>${item.quantity}</td>
+
+<td>${item.price}</td>
+
+<td>${item.price * item.quantity}</td>
+
+</tr>
+
+`;
 
     });
-
 
     document.getElementById("subtotal")
-        .innerHTML=total;
+        .innerHTML = subtotal.toFixed(2);
 
 }
 
+// =====================================================
+// ORDER
+// =====================================================
 
+async function placeOrder() {
 
+    if (selectedRestaurant == null) {
 
-async function placeOrder(){
+        alert("Select a restaurant first.");
 
+        return;
 
+    }
 
-    let order =
+    if (cart.length === 0) {
+
+        alert("Cart is empty.");
+
+        return;
+
+    }
+
+    const customerId = 1;
+
+    const order = await api(
+
+        `/orders/customer/${customerId}/restaurant/${selectedRestaurant}`,
+
+        {
+
+            method: "POST"
+
+        }
+
+    );
+
+    if (!order)
+        return;
+
+    currentOrder = order.orderId;
+
+    document.getElementById("currentOrder")
+        .innerHTML = currentOrder;
+
+    for (const item of cart) {
+
         await api(
 
-            "/orders/create",
+            `/orders/${currentOrder}/items/${item.id}`,
 
             {
 
-                method:"POST",
+                method: "POST",
 
-                headers:{
-                    "Content-Type":"application/json"
+                headers: {
+
+                    "Content-Type": "application/json"
+
                 },
 
+                body: JSON.stringify({
 
-                body:JSON.stringify({
+                    quantity: item.quantity,
 
-                    customerId:1,
-
-                    restaurantId:selectedRestaurant,
-
-                    items:cart
+                    unitPrice: item.price
 
                 })
 
-
-            });
-
-
-
-    currentOrder =
-        order.orderId;
-
-
-
-    for(let item of cart){
-
-
-        await api(
-
-            `/orders/${currentOrder}/items/${item.id}?quantity=${item.quantity}`,
-
-            {
-                method:"POST"
             }
 
         );
 
     }
 
+    alert("Order placed successfully!");
 
+    cart = [];
 
-    alert("Order placed");
+    renderCart();
 
-    show("tracking");
+    showSection("trackingSection");
 
+    trackOrder();
 
 }
 
+// =====================================================
+// ORDER TRACKING
+// =====================================================
 
+async function trackOrder() {
 
-
-
-
-
-/*
-=========================
- DELIVERY TRACKING
-=========================
-*/
-
-
-
-async function pollStatus(){
-
-
-    if(!currentOrder)
+    if (currentOrder == null)
         return;
 
+    const order =
+        await api(`/orders/${currentOrder}`);
 
+    if (!order)
+        return;
 
-    let order =
-        await api(
-            `/orders/${currentOrder}`
-        );
+    document.getElementById("orderStatus")
+        .innerHTML = order.status;
 
+    document.querySelectorAll("#progress div")
+        .forEach(x => x.classList.remove("active"));
 
+    switch (order.status) {
 
-    let steps=[
+        case "PENDING":
 
-        "PENDING",
-        "CONFIRMED",
-        "PREPARING",
-        "READY",
-        "DELIVERED"
+            document.getElementById("pPending")
+                .classList.add("active");
 
-    ];
+            break;
 
+        case "PREPARING":
 
+            document.getElementById("pPending")
+                .classList.add("active");
 
-    document
-        .querySelectorAll("#progress div")
-        .forEach((x,i)=>{
+            document.getElementById("pPreparing")
+                .classList.add("active");
 
+            break;
 
-            x.classList.toggle(
-                "active",
-                steps.indexOf(order.status)>=i
-            );
+        case "READY":
 
+            document.getElementById("pPending")
+                .classList.add("active");
 
-        });
+            document.getElementById("pPreparing")
+                .classList.add("active");
 
+            document.getElementById("pReady")
+                .classList.add("active");
 
+            break;
 
-    setTimeout(
-        pollStatus,
-        5000
-    );
+        case "DELIVERED":
 
+            document.querySelectorAll("#progress div")
+                .forEach(x => x.classList.add("active"));
 
-}
+            break;
 
+    }
 
-
-
-
-
-/*
-=========================
- PAYMENTS
-=========================
-*/
-
-
-
-async function pay(orderId,method){
-
-
-
-    return await api(
-
-        `/payments/${orderId}?method=${method}`,
-
-        {
-
-            method:"POST"
-
-        }
-
-    );
-
+    setTimeout(trackOrder, 5000);
 
 }
 
+// =====================================================
+// INITIAL LOAD
+// =====================================================
 
+window.onload = function () {
 
+    showSection("restaurantsSection");
 
-async function completePayment(paymentId){
+    loadRestaurants();
 
+};
+// =====================================================
+// REVIEWS
+// =====================================================
 
-    return await api(
+async function viewReviews(id) {
 
-        `/payments/${paymentId}/complete`,
+    document.getElementById("reviewRestaurantId").value = id;
 
-        {
+    showSection("reviewsSection");
 
-            method:"PUT"
-
-        }
-
-    );
-
+    await loadReviews();
 
 }
 
+async function loadReviews() {
 
+    const id =
+        document.getElementById("reviewRestaurantId").value;
 
+    if (!id)
+        return;
 
+    const reviews =
+        await api(`/reviews/restaurant/${id}?page=0&size=20`);
 
+    const avg =
+        await api(`/reviews/restaurant/${id}/average`);
 
+    document.getElementById("averageRating").innerHTML =
+        avg ?? "-";
 
+    const table =
+        document.getElementById("reviewsTable");
 
-/*
-=========================
- REVIEWS
-=========================
-*/
+    table.innerHTML = "";
 
+    if (!reviews)
+        return;
 
+    const list =
+        reviews.content ? reviews.content : reviews;
 
-async function leaveRestaurantReview(){
+    list.forEach(r => {
 
+        table.innerHTML += `
 
+<tr>
 
-    let rating =
-        prompt("Rating 1-5");
+<td>${r.customerName ?? "-"}</td>
 
+<td>${r.rating}</td>
 
-    let comment =
+<td>${r.comment}</td>
+
+</tr>
+
+`;
+
+    });
+
+}
+
+async function leaveRestaurantReview() {
+
+    const restaurantId =
+        document.getElementById("reviewRestaurantId").value;
+
+    if (!restaurantId) {
+
+        alert("Enter restaurant ID.");
+
+        return;
+
+    }
+
+    const rating =
+        prompt("Rating (1-5)");
+
+    if (rating == null)
+        return;
+
+    const comment =
         prompt("Comment");
 
-
+    if (comment == null)
+        return;
 
     await api(
 
-        `/reviews/restaurant?customerId=1&restaurantId=${selectedRestaurant}&rating=${rating}&comment=${comment}`,
+        `/reviews/restaurant/${restaurantId}/customer/1?rating=${rating}&comment=${encodeURIComponent(comment)}`,
 
         {
 
-            method:"POST"
+            method: "POST"
 
         }
 
     );
 
+    alert("Review submitted.");
 
-    alert("Review saved");
-
+    loadReviews();
 
 }
 
+// =====================================================
+// PAYMENTS
+// =====================================================
 
+async function createPayment() {
 
+    const orderId =
+        document.getElementById("paymentOrderId").value;
 
-async function reviews(id){
+    const method =
+        document.getElementById("paymentMethod").value;
 
+    if (!orderId) {
 
-    let data =
+        alert("Enter order ID.");
+
+        return;
+
+    }
+
+    const payment =
         await api(
 
-            `/reviews/restaurant/${id}`
+            `/payments/order/${orderId}?method=${method}`,
+
+            {
+
+                method: "POST"
+
+            }
 
         );
 
+    if (!payment)
+        return;
 
+    document.getElementById("paymentResult").innerHTML =
 
-    console.log(data);
-
-
-    alert(
-        JSON.stringify(data)
-    );
-
+        `
+        Payment Created<br>
+        Payment ID : ${payment.paymentId}<br>
+        Status : ${payment.status}
+        `;
 
 }
 
+async function completePayment() {
 
+    const paymentId =
+        document.getElementById("completePaymentId").value;
 
+    if (!paymentId)
+        return;
 
-async function restaurantRating(id){
-
-
-    let avg =
+    const payment =
         await api(
 
-            `/reviews/restaurant/${id}/average`
+            `/payments/${paymentId}/complete`,
+
+            {
+
+                method: "PUT"
+
+            }
 
         );
 
+    if (!payment)
+        return;
 
-    alert(
-        "Rating "+avg
-    );
+    document.getElementById("paymentResult").innerHTML =
 
+        `
+        Payment Completed<br>
+        Status : ${payment.status}
+        `;
 
 }
 
+// =====================================================
+// DRIVER
+// =====================================================
 
+async function updateDriverStatus() {
 
+    const id =
+        document.getElementById("driverId").value;
 
-/*
- DRIVER REVIEWS
-*/
-
-
-
-async function leaveDriverReview(driverId){
-
-
-
-    let rating =
-        prompt("Rating");
-
-
-    let comment =
-        prompt("Comment");
-
-
+    const status =
+        document.getElementById("driverStatus").value;
 
     await api(
 
-        `/reviews/driver?customerId=1&driverId=${driverId}&rating=${rating}&comment=${comment}`,
+        `/drivers/${id}/status?isOnline=${status}`,
 
         {
 
-            method:"POST"
+            method: "PUT"
 
         }
 
     );
 
+    alert("Driver status updated.");
 
 }
 
+async function updateLocation() {
 
+    const id =
+        document.getElementById("driverLocationId").value;
 
+    const lat =
+        document.getElementById("lat").value;
 
+    const lng =
+        document.getElementById("lng").value;
 
-/*
-=========================
- RESTAURANT ADMIN
-=========================
-*/
+    await api(
 
-
-async function toggleRestaurant(id,status){
-
-
-    return api(
-
-        `/restaurants/${id}/accepting?status=${status}`,
+        `/drivers/${id}/location?lat=${lat}&lng=${lng}`,
 
         {
 
-            method:"PUT"
+            method: "PUT"
 
         }
 
     );
 
+    alert("Location updated.");
 
 }
 
+async function findNearbyDrivers() {
 
+    const lat =
+        document.getElementById("searchLat").value;
 
-async function updateDeliveryFee(id,fee){
+    const lng =
+        document.getElementById("searchLng").value;
 
+    const radius =
+        document.getElementById("radius").value;
 
-    return api(
-
-        `/restaurants/${id}/fee?fee=${fee}`,
-
-        {
-
-            method:"PUT"
-
-        }
-
-    );
-
-
-}
-
-
-
-
-
-async function topSellingItems(id){
-
-
-    return api(
-
-        `/restaurants/${id}/top-selling`
-
-    );
-
-
-}
-
-
-
-async function restaurantRevenue(id){
-
-
-    return api(
-
-        `/restaurants/${id}/revenue`
-
-    );
-
-
-}
-
-
-
-
-
-/*
-=========================
- DRIVER
-=========================
-*/
-
-
-async function driverLocation(
-    driverId,
-    lat,
-    lng
-){
-
-
-    return api(
-
-        `/drivers/${driverId}/location?lat=${lat}&lng=${lng}`,
-
-        {
-
-            method:"PUT"
-
-        }
-
-    );
-
-
-}
-
-
-
-async function nearbyDrivers(
-    lat,
-    lng,
-    radius
-){
-
-
-    return api(
-
-        `/drivers/nearby?lat=${lat}&lng=${lng}&radiusKm=${radius}`
-
-    );
-
-
-}
-
-
-
-
-/*
-=========================
- DASHBOARD
-=========================
-*/
-
-
-async function loadDashboard(){
-
-
-
-    let customers =
+    const drivers =
         await api(
-            "/customers/top-loyal"
+
+            `/deliveries/drivers/nearby?lat=${lat}&lng=${lng}&radiusKm=${radius}`
+
         );
 
+    const table =
+        document.getElementById("driversTable");
 
+    table.innerHTML = "";
 
-    let drivers =
+    if (!drivers)
+        return;
+
+    drivers.forEach(driver => {
+
+        table.innerHTML += `
+
+<tr>
+
+<td>${driver.name}</td>
+
+<td>${driver.phone}</td>
+
+<td>${driver.online ? "Online" : "Offline"}</td>
+
+</tr>
+
+`;
+
+    });
+
+}
+
+// =====================================================
+// REPORTS
+// =====================================================
+
+async function loadReports() {
+
+    loadTopCustomer();
+
+    loadLeaderboard();
+
+}
+
+async function loadTopCustomer() {
+
+    const customer =
+        await api("/reports/customers/topLoyalty");
+
+    if (!customer)
+        return;
+
+    const c =
+        Array.isArray(customer) ? customer[0] : customer;
+
+    document.getElementById("topCustomer").innerHTML =
+
+        `
+        <strong>${c.name}</strong><br>
+        Email : ${c.email}<br>
+        Loyalty Points : ${c.loyaltyPoints}
+        `;
+
+}
+
+async function loadLeaderboard() {
+
+    const drivers =
+        await api("/reports/drivers/leaderboard");
+
+    const table =
+        document.getElementById("leaderboard");
+
+    table.innerHTML = "";
+
+    if (!drivers)
+        return;
+
+    drivers.forEach(driver => {
+
+        table.innerHTML += `
+
+<tr>
+
+<td>${driver.name}</td>
+
+<td>${driver.phone}</td>
+
+</tr>
+
+`;
+
+    });
+
+}
+
+async function loadPlatformOrders() {
+
+    const start =
+        document.getElementById("ordersStart").value;
+
+    const end =
+        document.getElementById("ordersEnd").value;
+
+    if (!start || !end)
+        return;
+
+    const count =
         await api(
-            "/deliveries/leaderboard"
+
+            `/reports/platform/dailySummary/orders?start=${start}&end=${end}`
+
         );
 
+    document.getElementById("platformOrders").innerHTML =
+        count;
 
+}
 
-    let revenue =
+async function loadPlatformFees() {
+
+    const start =
+        document.getElementById("feesStart").value;
+
+    const end =
+        document.getElementById("feesEnd").value;
+
+    if (!start || !end)
+        return;
+
+    const fees =
         await api(
-            "/reports/revenue"
+
+            `/reports/platform/dailySummary/fees?start=${start}&end=${end}`
+
         );
 
-
-
-    document.getElementById("customers")
-        .innerHTML =
-        JSON.stringify(customers);
-
-
-
-    document.getElementById("drivers")
-        .innerHTML =
-        JSON.stringify(drivers);
-
-
-
-    document.getElementById("summary")
-        .innerHTML =
-        JSON.stringify(revenue);
-
-
+    document.getElementById("platformFees").innerHTML =
+        fees;
 
 }
