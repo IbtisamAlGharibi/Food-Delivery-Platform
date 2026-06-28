@@ -35,7 +35,7 @@ public class RestaurantService {
         this.orderItemRepository=orderItemRepository;
     }
 
-    public RestaurantResponseDTO createRestaurant(RestaurantRequestDTO dto, Integer ownerId){
+    public RestaurantResponseDTO createRestaurant(RestaurantRequestDTO dto, String ownerId){
         RestaurantOwner owner = restaurantOwnerRepository.findById(ownerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Owner not found"));
 

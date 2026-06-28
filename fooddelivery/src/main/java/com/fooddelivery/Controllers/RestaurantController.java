@@ -24,7 +24,7 @@ public class RestaurantController {
         this.restaurantService = restaurantService;
     }
     @PostMapping("/owner/{ownerId}")
-    public ResponseEntity<RestaurantResponseDTO> createRestaurant(@PathVariable Integer ownerId,
+    public ResponseEntity<RestaurantResponseDTO> createRestaurant(@PathVariable String ownerId,
             @Valid @RequestBody RestaurantRequestDTO dto) {
         RestaurantResponseDTO restaurant = restaurantService.createRestaurant(dto, ownerId);
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurant);

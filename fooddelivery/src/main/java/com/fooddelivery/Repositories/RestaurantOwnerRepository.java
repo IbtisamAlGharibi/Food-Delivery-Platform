@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface RestaurantOwnerRepository extends JpaRepository<RestaurantOwner,Integer> {
+public interface RestaurantOwnerRepository extends JpaRepository<RestaurantOwner,String > {
     @Query("select ro from RestaurantOwner ro where ro.isActive=true")
     List<RestaurantOwner> getAllOwners();
 }
