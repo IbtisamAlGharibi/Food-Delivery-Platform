@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Food Delivery Client</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Food Delivery System</h1>
+
+    <nav>
+        <button onclick="showRestaurants()">Restaurants</button>
+        <button onclick="showCart()">Cart</button>
+        <button onclick="showTracking()">Tracking</button>
+        <button onclick="showDashboard()">Admin Dashboard</button>
+    </nav>
+</header>
+
+
+<div id="loading" class="loading">
+    Loading...
+</div>
+
+
+<div id="error" class="error"></div>
+
+
+
+<main>
+
+
+    <section id="restaurants">
+
+        <h2>Restaurant Browse</h2>
+
+
+        <input
+                id="search"
+                placeholder="Search restaurant..."
+                onkeyup="loadRestaurants()">
+
+
+        <select id="cuisine" onchange="loadRestaurants()">
+            <option value="">All Cuisine</option>
+            <option>Italian</option>
+            <option>Indian</option>
+            <option>Fast Food</option>
+        </select>
+
+
+        <div id="restaurantList" class="grid"></div>
+
+
+    </section>
+
+
+
+    <section id="menu" class="hidden">
+
+        <h2>Menu</h2>
+
+        <div id="menuItems" class="grid"></div>
+
+
+        <h3>
+            Subtotal:
+            <span id="subtotal">0</span>
+        </h3>
+
+
+        <button onclick="placeOrder()">
+            Place Order
+        </button>
+
+
+    </section>
+
+
+
+
+    <section id="tracking" class="hidden">
+
+        <h2>Order Tracking</h2>
+
+
+        <div id="progress">
+
+            <div>PENDING</div>
+            <div>PREPARING</div>
+            <div>READY</div>
+            <div>DELIVERED</div>
+
+        </div>
+
+
+        <h3>
+            ETA:
+            <span id="eta">
+-
+</span>
+        </h3>
+
+
+    </section>
+
+
+
+
+    <section id="dashboard" class="hidden">
+
+
+        <h2>Admin Reporting</h2>
+
+
+        <h3>Daily Summary</h3>
+
+        <table id="summary"></table>
+
+
+
+        <h3>Top Loyalty Customers</h3>
+
+        <table id="customers"></table>
+
+
+
+        <h3>Driver Leaderboard</h3>
+
+        <table id="drivers"></table>
+
+
+    </section>
+
+
+
+</main>
+
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
